@@ -47,51 +47,56 @@
             -webkit-appearance: none;
             margin: 0;
         }
+        .low-stock-alert {
+            background-color: #ffe0b2; /* Light orange */
+            color: #e65100; /* Darker orange */
+            font-weight: 500;
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
     <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (tổng quan, khách hàng, thực phẩm, tài chính, mặt hàng, quản lý dữ liệu) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác như thêm, chỉnh sửa, xóa, xuất/nhập và sử dụng datalist cho các trường nhập liệu. -->
+    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (tổng quan, khách hàng, thực phẩm, tài chính, mặt hàng, quản lý dữ liệu) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác như thêm, chỉnh sửa, xóa, xuất/nhập, sắp xếp bảng và sử dụng datalist cho các trường nhập liệu. Bộ lọc ngày tháng trên Tổng quan và cảnh báo tồn kho thấp là các điểm nhấn chuyên nghiệp. CSV được xuất ra với tiêu đề tiếng Anh để tránh lỗi font và dễ dàng sử dụng hơn. Lời lỗ được tính toán dựa trên dữ liệu mua hàng và bán hàng. -->
     <!-- Visualization & Content Choices:
     - Tổng quan:
-        - Mục tiêu: Hiển thị tổng quan nhanh về hiệu suất hàng ngày.
-        - Viz/Presentation: Các chỉ số KPI lớn (thu nhập, khách hàng, lợi nhuận). Biểu đồ đường (Chart.js) cho xu hướng thu nhập 7 ngày. Biểu đồ cột (Chart.js) cho lợi nhuận theo loại thực phẩm (top 5).
-        - Tương tác: Chỉ hiển thị, cung cấp cái nhìn tổng thể.
-        - Lý do: Cho phép người dùng nhanh chóng nắm bắt tình hình kinh doanh tổng thể mà không cần đi sâu vào chi tiết.
-        - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind).
+        - Mục tiêu: Hiển thị tổng quan nhanh về hiệu suất theo ngày hoặc theo khoảng thời gian tùy chọn.
+        - Viz/Presentation: Các chỉ số KPI lớn (thu nhập, khách hàng, lợi nhuận, tổng khách hàng, tổng mặt hàng). Biểu đồ đường (Chart.js) cho xu hướng thu nhập 7 ngày. Biểu đồ cột (Chart.js) cho lợi nhuận theo loại thực phẩm (top 5).
+        - Tương tác: Lọc theo khoảng thời gian cho KPIs, chỉ hiển thị biểu đồ xu hướng.
+        - Lý do: Cung cấp cái nhìn tổng thể linh hoạt, giúp người dùng nhanh chóng nắm bắt tình hình kinh doanh.
+        - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind), Vanilla JS (lọc ngày).
     - Khách hàng:
         - Mục tiêu: Quản lý và theo dõi thông tin tương tác với khách hàng.
-        - Viz/Presentation: Bảng dữ liệu (HTML table) với các trường "Tên khách hàng", "Ngày tương tác cuối", "Ngày theo dõi tiếp theo", "Trạng thái". Form nhập liệu đơn giản.
-        - Tương tác: Thêm khách hàng mới, cập nhật trạng thái theo dõi, xuất CSV, chỉnh sửa, xóa.
-        - Lý do: Định dạng bảng là hiệu quả nhất để xem và quản lý dữ liệu bản ghi riêng lẻ.
+        - Viz/Presentation: Bảng dữ liệu (HTML table). Form nhập liệu đơn giản.
+        - Tương tác: Thêm khách hàng mới, cập nhật trạng thái theo dõi, xuất CSV (tiếng Anh), chỉnh sửa, xóa, sắp xếp cột.
+        - Lý do: Định dạng bảng là hiệu quả nhất để xem và quản lý dữ liệu bản ghi riêng lẻ, với khả năng chỉnh sửa và sắp xếp tăng cường tính chuyên nghiệp.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Thực phẩm & Kho:
         - Mục tiêu: Theo dõi tồn kho thực phẩm, quản lý chi phí mua hàng và biến phí.
-        - Viz/Presentation: Hai bảng riêng biệt: "Tồn kho thực phẩm" và "Nhập/Mua hàng & Biến phí". Các trường tương ứng với thông tin được yêu cầu. Datalist cho tên thực phẩm.
-        - Tương tác: Thêm/cập nhật/xóa các mục, xem lịch sử mua hàng, xuất CSV, chỉnh sửa.
-        - Lý do: Giúp người dùng dễ dàng theo dõi chi tiết về vật tư và chi phí vận hành.
+        - Viz/Presentation: Ba bảng riêng biệt: "Tồn kho thực phẩm", "Lịch sử Mua hàng" và "Biến phí khác". Các trường nhập liệu sử dụng datalist cho tên thực phẩm. Ngưỡng tồn kho thấp có thể cấu hình.
+        - Tương tác: Thêm/cập nhật/xóa các mục, xem lịch sử mua hàng, xuất CSV (tiếng Anh), chỉnh sửa, sắp xếp cột, cảnh báo tồn kho thấp trực quan.
+        - Lý do: Giúp người dùng dễ dàng theo dõi chi tiết về vật tư và chi phí vận hành, với cảnh báo sớm cho các mặt hàng sắp hết. Tính năng mua hàng riêng biệt hỗ trợ tính toán lời lỗ chính xác hơn.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Tài chính:
         - Mục tiêu: Cung cấp cái nhìn chi tiết về doanh thu, chi phí và lợi nhuận.
-        - Viz/Presentation: Bảng "Doanh thu chi tiết" và bảng "Tổng quan Lợi nhuận". Biểu đồ đường (Chart.js) để minh họa xu hướng doanh thu và lợi nhuận hàng tháng. Datalist cho tên sản phẩm/dịch vụ.
-        - Tương tác: Lọc theo ngày/tháng, xem dữ liệu tổng hợp, xuất CSV, chỉnh sửa, xóa.
+        - Viz/Presentation: Bảng "Doanh thu chi tiết" và biểu đồ đường (Chart.js) để minh họa xu hướng doanh thu và lợi nhuận hàng tháng. Datalist cho tên sản phẩm/dịch vụ.
+        - Tương tác: Thêm/chỉnh sửa/xóa giao dịch, xem dữ liệu tổng hợp, xuất CSV (tiếng Anh), sắp xếp cột.
         - Lý do: Kết hợp dữ liệu chi tiết với biểu đồ xu hướng giúp người dùng phân tích hiệu quả tài chính.
         - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind), Vanilla JS.
     - Quản lý Mặt hàng:
         - Mục tiêu: Tạo và quản lý danh sách các mặt hàng/sản phẩm có sẵn tại cửa hàng.
-        - Viz/Presentation: Bảng dữ liệu với các trường "Tên mặt hàng", "Đơn vị mặc định". Form nhập liệu.
-        - Tương tác: Thêm mặt hàng mới, chỉnh sửa, xóa mặt hàng.
-        - Lý do: Cung cấp nguồn dữ liệu chuẩn cho các phần khác, tăng tính nhất quán và tiện lợi khi nhập liệu.
+        - Viz/Presentation: Bảng dữ liệu. Form nhập liệu.
+        - Tương tác: Thêm mặt hàng mới, chỉnh sửa, xóa mặt hàng, sắp xếp cột.
+        - Lý do: Cung cấp nguồn dữ liệu chuẩn, tăng tính nhất quán và tiện lợi khi nhập liệu, đặc biệt với datalist.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Quản lý Dữ liệu:
-        - Mục tiêu: Cung cấp các công cụ để sao lưu và khôi phục dữ liệu người dùng.
-        - Viz/Presentation: Nút (buttons) cho chức năng xuất dữ liệu (JSON tổng hợp), và một input file + nút để nhập dữ liệu (JSON tổng hợp).
+        - Mục tiêu: Cung cấp các công cụ để sao lưu và khôi phục dữ liệu người dùng, bao gồm cả xuất báo cáo tổng quan.
+        - Viz/Presentation: Nút (buttons) cho chức năng xuất dữ liệu (JSON tổng hợp), và một input file + nút để nhập dữ liệu (JSON tổng hợp). Nút xuất báo cáo tổng quan CSV.
         - Tương tác: Nhấp vào nút để tải xuống file; chọn file để tải lên và cập nhật dữ liệu.
-        - Lý do: Đáp ứng nhu cầu sao lưu và chia sẻ dữ liệu dễ dàng cho người dùng cuối cùng, đặc biệt khi chạy ứng dụng cục bộ.
+        - Lý do: Đáp ứng nhu cầu sao lưu và chia sẻ dữ liệu dễ dàng cho người dùng cuối cùng, cùng với khả năng tạo báo cáo nhanh.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS (JSON.stringify, Blob, FileReader).
     - Giao diện người dùng (UI):
         - Mục tiêu: Đảm bảo trải nghiệm người dùng trực quan, dễ sử dụng, và hiển thị đẹp mắt trên mọi thiết bị.
-        - Phương pháp trình bày: Bố cục đáp ứng (Tailwind CSS Flexbox/Grid), thanh điều hướng bên trái, khu vực nội dung chính. Các nút, dropdown, datalist cho tương tác.
+        - Phương pháp trình bày: Bố cục đáp ứng (Tailwind CSS Flexbox/Grid), thanh điều hướng bên trái, khu vực nội dung chính. Các nút, dropdown, datalist, sắp xếp bảng cho tương tác.
         - Tương tác: Chuyển đổi giữa các phần, nhập/sửa/xóa dữ liệu.
         - Lý do: Cấu trúc SPA rõ ràng giúp người dùng tập trung vào từng phần dữ liệu mà không bị phân tâm.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
@@ -139,21 +144,40 @@
     <main class="flex-grow p-4 md:p-8">
         <!-- Tổng quan Section -->
         <section id="section-tongquan" class="content-section active bg-white p-6 shadow-lg rounded-xl mb-6">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Tổng quan hàng ngày</h2>
-            <p class="text-gray-600 mb-6">Phần này cung cấp một cái nhìn tổng thể về hiệu suất kinh doanh hàng ngày của bạn, bao gồm các chỉ số chính và xu hướng quan trọng.</p>
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Tổng quan</h2>
+            <p class="text-gray-600 mb-6">Phần này cung cấp một cái nhìn tổng thể về hiệu suất kinh doanh của bạn, bao gồm các chỉ số chính và xu hướng quan trọng. Bạn có thể chọn khoảng thời gian để xem các chỉ số.</p>
 
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label for="start-date-filter" class="block text-sm font-medium text-gray-700">Từ ngày</label>
+                    <input type="date" id="start-date-filter" class="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
+                </div>
+                <div>
+                    <label for="end-date-filter" class="block text-sm font-medium text-gray-700">Đến ngày</label>
+                    <input type="date" id="end-date-filter" class="mt-1 p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mb-8">
                 <div class="bg-blue-50 p-6 rounded-lg shadow-md flex flex-col items-center">
-                    <div class="text-sm font-medium text-gray-500 mb-2">Thu nhập hôm nay</div>
-                    <div id="daily-income" class="text-3xl font-bold text-blue-600">0 VNĐ</div>
+                    <div class="text-sm font-medium text-gray-500 mb-2">Tổng thu nhập</div>
+                    <div id="total-income-range" class="text-3xl font-bold text-blue-600">0 VNĐ</div>
                 </div>
                 <div class="bg-green-50 p-6 rounded-lg shadow-md flex flex-col items-center">
                     <div class="text-sm font-medium text-gray-500 mb-2">Khách hàng tương tác</div>
-                    <div id="daily-customers" class="text-3xl font-bold text-green-600">0</div>
+                    <div id="customers-in-range" class="text-3xl font-bold text-green-600">0</div>
                 </div>
                 <div class="bg-red-50 p-6 rounded-lg shadow-md flex flex-col items-center">
                     <div class="text-sm font-medium text-gray-500 mb-2">Lợi nhuận ước tính</div>
-                    <div id="daily-profit" class="text-3xl font-bold text-red-600">0 VNĐ</div>
+                    <div id="profit-in-range" class="text-3xl font-bold text-red-600">0 VNĐ</div>
+                </div>
+                 <div class="bg-purple-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <div class="text-sm font-medium text-gray-500 mb-2">Tổng số khách hàng</div>
+                    <div id="total-customers-kpi" class="text-3xl font-bold text-purple-600">0</div>
+                </div>
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <div class="text-sm font-medium text-gray-500 mb-2">Tổng số mặt hàng</div>
+                    <div id="total-products-kpi" class="text-3xl font-bold text-yellow-600">0</div>
                 </div>
             </div>
 
@@ -198,10 +222,10 @@
                 <table class="min-w-full bg-white rounded-lg overflow-hidden">
                     <thead>
                         <tr>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Khách hàng</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày tương tác cuối</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày theo dõi tiếp</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Trạng thái</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg cursor-pointer" data-sort-key="name">Tên Khách hàng &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="lastContact">Ngày tương tác cuối &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="nextFollowup">Ngày theo dõi tiếp &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="status">Trạng thái &#x25B2;&#x25BC;</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
@@ -222,6 +246,10 @@
                 <!-- Tồn kho thực phẩm -->
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-700 mb-3">Tồn kho thực phẩm</h3>
+                    <div class="mb-4">
+                        <label for="low-stock-threshold" class="block text-sm font-medium text-gray-700 mb-1">Ngưỡng tồn kho thấp:</label>
+                        <input type="number" id="low-stock-threshold" value="10" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 w-full">
+                    </div>
                     <div class="grid grid-cols-1 gap-4 mb-4">
                         <input type="text" id="food-item-name" list="product-names-list" placeholder="Tên thực phẩm" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                         <datalist id="product-names-list"></datalist>
@@ -235,9 +263,9 @@
                         <table class="min-w-full bg-white rounded-lg overflow-hidden">
                             <thead>
                                 <tr>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Thực phẩm</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số lượng</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Đơn vị</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg cursor-pointer" data-sort-key="name">Tên Thực phẩm &#x25B2;&#x25BC;</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="quantity">Số lượng &#x25B2;&#x25BC;</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="unit">Đơn vị &#x25B2;&#x25BC;</th>
                                     <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                                 </tr>
                             </thead>
@@ -249,35 +277,66 @@
                     </div>
                 </div>
 
-                <!-- Nhập/Mua hàng & Biến phí -->
-                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Nhập/Mua hàng & Biến phí</h3>
-                    <div class="grid grid-cols-1 gap-4 mb-4">
-                        <select id="expense-type" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                            <option value="mua_thuc_pham">Mua thực phẩm</option>
-                            <option value="bien_phi_khac">Biến phí khác</option>
-                        </select>
-                        <input type="text" id="expense-description" placeholder="Mô tả (ví dụ: Thịt bò, Tiền điện)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <input type="number" id="expense-amount" placeholder="Số tiền/Giá (VNĐ)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
-                        <input type="date" id="expense-date" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                <!-- Mua hàng & Biến phí -->
+                <div class="grid grid-cols-1 gap-6">
+                    <!-- Thêm Giao dịch Mua hàng -->
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Thêm Giao dịch Mua hàng</h3>
+                        <div class="grid grid-cols-1 gap-4 mb-4">
+                            <input type="text" id="purchase-item-name" list="product-names-list" placeholder="Tên mặt hàng" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="number" id="purchase-quantity" placeholder="Số lượng" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="text" id="purchase-unit" placeholder="Đơn vị (kg, lít, cái...)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="number" id="purchase-price-per-unit" placeholder="Giá mua mỗi đơn vị (VNĐ)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="date" id="purchase-date" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <button id="add-purchase-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm Giao dịch Mua</button>
+                        <div class="overflow-x-auto mt-4 rounded-lg shadow-md">
+                            <h3 class="text-md font-semibold text-gray-800 mb-2 p-2">Lịch sử Mua hàng</h3>
+                            <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg cursor-pointer" data-sort-key="itemName">Mặt hàng &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="quantity">SL &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="purchasePrice">Giá/Đơn vị &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="totalCost">Tổng chi phí &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="date">Ngày &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="purchase-history-table-body">
+                                    <!-- Purchase history data will be inserted here -->
+                                </tbody>
+                            </table>
+                            <button id="export-purchase-history-csv-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition duration-200 ease-in-out w-full">Xuất CSV Lịch sử Mua hàng</button>
+                        </div>
                     </div>
-                    <button id="add-expense-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm chi phí</button>
-                    <div class="overflow-x-auto mt-4 rounded-lg shadow-md">
-                        <table class="min-w-full bg-white rounded-lg overflow-hidden">
-                            <thead>
-                                <tr>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Loại</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Mô tả</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số tiền (VNĐ)</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody id="expense-table-body">
-                                <!-- Expense data will be inserted here -->
-                            </tbody>
-                        </table>
-                        <button id="export-expenses-csv-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition duration-200 ease-in-out w-full">Xuất CSV Chi phí</button>
+
+                    <!-- Biến phí khác -->
+                    <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-3">Thêm Biến phí khác</h3>
+                        <div class="grid grid-cols-1 gap-4 mb-4">
+                            <input type="text" id="other-expense-description" placeholder="Mô tả (ví dụ: Tiền điện, Tiếp thị)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="number" id="other-expense-amount" placeholder="Số tiền (VNĐ)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <input type="date" id="other-expense-date" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        </div>
+                        <button id="add-other-expense-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm Biến phí</button>
+                        <div class="overflow-x-auto mt-4 rounded-lg shadow-md">
+                             <h3 class="text-md font-semibold text-gray-800 mb-2 p-2">Lịch sử Biến phí khác</h3>
+                            <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                                <thead>
+                                    <tr>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg cursor-pointer" data-sort-key="description">Mô tả &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="amount">Số tiền (VNĐ) &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="date">Ngày &#x25B2;&#x25BC;</th>
+                                        <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="other-expense-table-body">
+                                    <!-- Other expense data will be inserted here -->
+                                </tbody>
+                            </table>
+                             <button id="export-other-expenses-csv-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition duration-200 ease-in-out w-full">Xuất CSV Biến phí khác</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -304,10 +363,10 @@
                 <table class="min-w-full bg-white rounded-lg overflow-hidden">
                     <thead>
                         <tr>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Ngày</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Sản phẩm/Dịch vụ</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số lượng</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Doanh thu (VNĐ)</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg cursor-pointer" data-sort-key="date">Ngày &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="itemName">Sản phẩm/Dịch vụ &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="quantity">Số lượng &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="price">Doanh thu (VNĐ) &#x25B2;&#x25BC;</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
@@ -346,8 +405,8 @@
                 <table class="min-w-full bg-white rounded-lg overflow-hidden">
                     <thead>
                         <tr>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Mặt hàng</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Đơn vị mặc định</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg cursor-pointer" data-sort-key="name">Tên Mặt hàng &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="defaultUnit">Đơn vị mặc định &#x25B2;&#x25BC;</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
@@ -369,6 +428,9 @@
                 <button id="export-all-data-json-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200 ease-in-out w-full mb-4">
                     Xuất Tất Cả Dữ liệu (JSON)
                 </button>
+                 <button id="export-summary-csv-btn" class="bg-teal-500 text-white px-4 py-2 rounded-lg hover:bg-teal-600 transition duration-200 ease-in-out w-full mb-4">
+                    Export Overall Summary (CSV)
+                </button>
                 <input type="file" id="import-data-file" accept=".json" class="hidden">
                 <button id="import-data-btn" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition duration-200 ease-in-out w-full">
                     Nhập Dữ liệu Từ File (JSON)
@@ -381,15 +443,22 @@
         const navItems = document.querySelectorAll('.nav-item');
         const contentSections = document.querySelectorAll('.content-section');
 
-        const dailyIncomeElement = document.getElementById('daily-income');
-        const dailyCustomersElement = document.getElementById('daily-customers');
-        const dailyProfitElement = document.getElementById('daily-profit');
+        const totalIncomeRangeElement = document.getElementById('total-income-range');
+        const customersInRangeElement = document.getElementById('customers-in-range');
+        const profitInRangeElement = document.getElementById('profit-in-range');
+        const totalCustomersKPIElement = document.getElementById('total-customers-kpi');
+        const totalProductsKPIElement = document.getElementById('total-products-kpi');
+
+        const startDateFilter = document.getElementById('start-date-filter');
+        const endDateFilter = document.getElementById('end-date-filter');
+        const lowStockThresholdInput = document.getElementById('low-stock-threshold');
 
         let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
-        let expensesData = JSON.parse(localStorage.getItem('expensesData')) || [];
+        let otherExpensesData = JSON.parse(localStorage.getItem('otherExpensesData')) || []; // Renamed from expensesData
         let customersData = JSON.parse(localStorage.getItem('customersData')) || [];
         let foodInventoryData = JSON.parse(localStorage.getItem('foodInventoryData')) || [];
-        let productItemsData = JSON.parse(localStorage.getItem('productItemsData')) || []; // New: Master list of products
+        let productItemsData = JSON.parse(localStorage.getItem('productItemsData')) || [];
+        let purchaseHistoryData = JSON.parse(localStorage.getItem('purchaseHistoryData')) || []; // New: Purchase History
 
         let dailyIncomeChartInstance;
         let profitByFoodChartInstance;
@@ -397,9 +466,10 @@
 
         let editingCustomerIndex = -1;
         let editingFoodInventoryIndex = -1;
-        let editingExpenseIndex = -1;
+        let editingOtherExpenseIndex = -1; // Updated
         let editingSaleIndex = -1;
         let editingProductItemIndex = -1;
+        let editingPurchaseHistoryIndex = -1; // New
 
         function showSection(sectionId) {
             contentSections.forEach(section => {
@@ -414,9 +484,16 @@
             });
             document.getElementById(`nav-${sectionId.replace('section-', '')}`).classList.add('active');
 
-            updateAllTables(); // Update all tables when section changes
-            updateProductDatalist(); // Ensure datalist is updated
+            updateAllTables();
+            updateProductDatalist();
             updateCharts();
+            updateSummaryKPIs();
+            if (sectionId === 'section-tongquan') {
+                const today = new Date().toISOString().slice(0, 10);
+                if (!startDateFilter.value) startDateFilter.value = today;
+                if (!endDateFilter.value) endDateFilter.value = today;
+                calculateSummaryForDateRange();
+            }
         }
 
         function formatDate(dateString) {
@@ -429,23 +506,62 @@
         }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(amount); // Changed to en-US locale for consistency
         }
 
-        function calculateDailySummary() {
-            const today = new Date().toISOString().slice(0, 10);
-            const dailySales = salesData.filter(sale => sale.date === today);
-            const dailyExpenses = expensesData.filter(expense => expense.date === today);
+        function calculateSummaryForDateRange() {
+            const start = startDateFilter.value ? new Date(startDateFilter.value) : null;
+            const end = endDateFilter.value ? new Date(endDateFilter.value) : null;
 
-            const totalDailyIncome = dailySales.reduce((sum, sale) => sum + sale.price, 0);
-            const totalDailyExpense = dailyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const estimatedDailyProfit = totalDailyIncome - totalDailyExpense;
+            let filteredSales = salesData;
+            let filteredOtherExpenses = otherExpensesData;
+            let filteredPurchases = purchaseHistoryData; // New
+            let filteredCustomers = customersData;
 
-            const uniqueCustomersToday = new Set(customersData.filter(customer => customer.lastContact === today).map(c => c.name)).size;
+            if (start && end) {
+                filteredSales = salesData.filter(sale => {
+                    const saleDate = new Date(sale.date);
+                    return saleDate >= start && saleDate <= end;
+                });
+                filteredOtherExpenses = otherExpensesData.filter(expense => {
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate >= start && expenseDate <= end;
+                });
+                filteredPurchases = purchaseHistoryData.filter(purchase => { // New
+                    const purchaseDate = new Date(purchase.date);
+                    return purchaseDate >= start && purchaseDate <= end;
+                });
+                filteredCustomers = customersData.filter(customer => {
+                    const lastContactDate = new Date(customer.lastContact);
+                    return lastContactDate >= start && lastContactDate <= end;
+                });
+            } else if (start && !end) {
+                 filteredSales = salesData.filter(sale => new Date(sale.date) >= start);
+                 filteredOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) >= start);
+                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) >= start); // New
+                 filteredCustomers = customersData.filter(customer => new Date(customer.lastContact) >= start);
+            } else if (!start && end) {
+                 filteredSales = salesData.filter(sale => new Date(sale.date) <= end);
+                 filteredOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) <= end);
+                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) <= end); // New
+                 filteredCustomers = customersData.filter(customer => new Date(customer.lastContact) <= end);
+            }
 
-            dailyIncomeElement.textContent = formatCurrency(totalDailyIncome);
-            dailyCustomersElement.textContent = uniqueCustomersToday;
-            dailyProfitElement.textContent = formatCurrency(estimatedDailyProfit);
+            const totalIncome = filteredSales.reduce((sum, sale) => sum + sale.price, 0);
+            const totalOtherExpense = filteredOtherExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const totalPurchaseCost = filteredPurchases.reduce((sum, purchase) => sum + purchase.totalCost, 0); // New
+            const estimatedProfit = totalIncome - totalOtherExpense - totalPurchaseCost; // Updated Profit Calc
+
+            const uniqueCustomers = new Set(filteredCustomers.map(c => c.name)).size;
+
+            totalIncomeRangeElement.textContent = formatCurrency(totalIncome);
+            customersInRangeElement.textContent = uniqueCustomers;
+            profitInRangeElement.textContent = formatCurrency(estimatedProfit);
+        }
+
+        function updateSummaryKPIs() {
+            totalCustomersKPIElement.textContent = customersData.length;
+            totalProductsKPIElement.textContent = productItemsData.length;
         }
 
         function updateCustomerTable() {
@@ -466,14 +582,20 @@
             });
             localStorage.setItem('customersData', JSON.stringify(customersData));
             attachTableEventListeners(tbody, 'customer');
+            updateSummaryKPIs();
         }
 
         function updateFoodInventoryTable() {
             const tbody = document.getElementById('food-inventory-table-body');
             tbody.innerHTML = '';
+            const lowStockThreshold = parseFloat(lowStockThresholdInput.value) || 0;
+
             foodInventoryData.forEach((item, index) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
+                if (item.quantity <= lowStockThreshold) {
+                    row.classList.add('low-stock-alert');
+                }
                 row.insertCell().textContent = item.name;
                 row.insertCell().textContent = item.quantity;
                 row.insertCell().textContent = item.unit;
@@ -487,13 +609,33 @@
             attachTableEventListeners(tbody, 'foodInventory');
         }
 
-        function updateExpenseTable() {
-            const tbody = document.getElementById('expense-table-body');
+        function updatePurchaseHistoryTable() { // New function
+            const tbody = document.getElementById('purchase-history-table-body');
             tbody.innerHTML = '';
-            expensesData.forEach((expense, index) => {
+            purchaseHistoryData.forEach((purchase, index) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
-                row.insertCell().textContent = expense.type === 'mua_thuc_pham' ? 'Mua thực phẩm' : 'Biến phí khác';
+                row.insertCell().textContent = purchase.itemName;
+                row.insertCell().textContent = purchase.quantity + ' ' + purchase.unit;
+                row.insertCell().textContent = formatCurrency(purchase.purchasePrice);
+                row.insertCell().textContent = formatCurrency(purchase.totalCost);
+                row.insertCell().textContent = formatDate(purchase.date);
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                `;
+            });
+            localStorage.setItem('purchaseHistoryData', JSON.stringify(purchaseHistoryData));
+            attachTableEventListeners(tbody, 'purchaseHistory');
+        }
+
+        function updateOtherExpenseTable() { // Renamed from updateExpenseTable
+            const tbody = document.getElementById('other-expense-table-body');
+            tbody.innerHTML = '';
+            otherExpensesData.forEach((expense, index) => {
+                const row = tbody.insertRow();
+                row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = expense.description;
                 row.insertCell().textContent = formatCurrency(expense.amount);
                 row.insertCell().textContent = formatDate(expense.date);
@@ -503,8 +645,8 @@
                     <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
                 `;
             });
-            localStorage.setItem('expensesData', JSON.stringify(expensesData));
-            attachTableEventListeners(tbody, 'expense');
+            localStorage.setItem('otherExpensesData', JSON.stringify(otherExpensesData));
+            attachTableEventListeners(tbody, 'otherExpense');
         }
 
         function updateSalesTable() {
@@ -527,7 +669,6 @@
             attachTableEventListeners(tbody, 'sale');
         }
 
-        // New: Update Product Items Table
         function updateProductItemsTable() {
             const tbody = document.getElementById('product-items-table-body');
             tbody.innerHTML = '';
@@ -544,6 +685,7 @@
             });
             localStorage.setItem('productItemsData', JSON.stringify(productItemsData));
             attachTableEventListeners(tbody, 'productItem');
+            updateSummaryKPIs();
         }
 
         function updateProductDatalist() {
@@ -559,9 +701,10 @@
         function updateAllTables() {
             updateCustomerTable();
             updateFoodInventoryTable();
-            updateExpenseTable();
+            updatePurchaseHistoryTable(); // New
+            updateOtherExpenseTable(); // Updated
             updateSalesTable();
-            updateProductItemsTable(); // New: Update product items table
+            updateProductItemsTable();
         }
 
         function updateCharts() {
@@ -612,7 +755,7 @@
                 data: {
                     labels: last7Days.map(d => formatDate(d)),
                     datasets: [{
-                        label: 'Thu nhập (VNĐ)',
+                        label: 'Revenue (VND)', // English label
                         data: incomeByDay,
                         borderColor: '#4CAF50',
                         backgroundColor: 'rgba(76, 175, 80, 0.2)',
@@ -637,7 +780,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Số tiền (VNĐ)'
+                                text: 'Amount (VND)' // English label
                             },
                             ticks: {
                                 callback: function(value) {
@@ -648,7 +791,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Ngày'
+                                text: 'Date' // English label
                             }
                         }
                     }
@@ -664,16 +807,19 @@
                 foodSales[sale.itemName] = (foodSales[sale.itemName] || 0) + sale.price;
             });
 
-            const foodExpenses = {};
-            expensesData.filter(exp => exp.type === 'mua_thuc_pham').forEach(exp => {
-                foodExpenses[exp.description] = (foodExpenses[exp.description] || 0) + exp.amount;
+            const foodPurchaseCosts = {}; // New
+            purchaseHistoryData.forEach(purchase => { // New
+                foodPurchaseCosts[purchase.itemName] = (foodPurchaseCosts[purchase.itemName] || 0) + purchase.totalCost;
             });
 
             const foodProfit = {};
-            for (const item in foodSales) {
-                const cost = foodExpenses[item] || 0;
-                foodProfit[item] = foodSales[item] - cost;
-            }
+            // Iterate over all unique food items from sales and purchases
+            const allFoodItems = new Set([...Object.keys(foodSales), ...Object.keys(foodPurchaseCosts)]);
+            allFoodItems.forEach(item => {
+                const salesRevenue = foodSales[item] || 0;
+                const purchaseCost = foodPurchaseCosts[item] || 0;
+                foodProfit[item] = salesRevenue - purchaseCost;
+            });
 
             const sortedFoodProfit = Object.entries(foodProfit).sort(([,a],[,b]) => b - a).slice(0, 5);
             const labels = sortedFoodProfit.map(entry => entry[0]);
@@ -684,7 +830,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Lợi nhuận (VNĐ)',
+                        label: 'Profit (VND)', // English label
                         data: data,
                         backgroundColor: '#FFC107',
                         borderColor: '#FFB300',
@@ -708,7 +854,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Lợi nhuận (VNĐ)'
+                                text: 'Profit (VND)' // English label
                             },
                             ticks: {
                                 callback: function(value) {
@@ -719,7 +865,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Loại Thực phẩm'
+                                text: 'Food Item' // English label
                             },
                             ticks: {
                                 callback: wrapLabels
@@ -737,20 +883,27 @@
 
             salesData.forEach(sale => {
                 const month = sale.date.slice(0, 7);
-                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0 };
+                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].income += sale.price;
             });
 
-            expensesData.forEach(expense => {
+            otherExpensesData.forEach(expense => { // Updated
                 const month = expense.date.slice(0, 7);
-                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0 };
+                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].expenses += expense.amount;
             });
 
+            purchaseHistoryData.forEach(purchase => { // New
+                const month = purchase.date.slice(0, 7);
+                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
+                monthlyData[month].purchaseCosts += purchase.totalCost;
+            });
+
+
             const sortedMonths = Object.keys(monthlyData).sort();
             const monthlyIncomes = sortedMonths.map(month => monthlyData[month].income);
-            const monthlyExpenses = sortedMonths.map(month => monthlyData[month].expenses);
-            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyData[month].expenses); // Fixed line here: changed .month to .expenses and added missing closing parenthesis
+            const monthlyTotalCosts = sortedMonths.map(month => monthlyData[month].expenses + monthlyData[month].purchaseCosts); // Updated
+            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyTotalCosts[sortedMonths.indexOf(month)]); // Updated
 
             monthlyFinancialChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -758,7 +911,7 @@
                     labels: sortedMonths,
                     datasets: [
                         {
-                            label: 'Doanh thu hàng tháng (VNĐ)',
+                            label: 'Monthly Revenue (VND)', // English label
                             data: monthlyIncomes,
                             borderColor: '#42A5F5',
                             backgroundColor: 'rgba(66, 165, 245, 0.2)',
@@ -766,15 +919,15 @@
                             tension: 0.3
                         },
                         {
-                            label: 'Chi phí hàng tháng (VNĐ)',
-                            data: monthlyExpenses,
+                            label: 'Monthly Expenses (VND)', // English label
+                            data: monthlyTotalCosts, // Updated
                             borderColor: '#EF5350',
                             backgroundColor: 'rgba(239, 83, 80, 0.2)',
                             fill: true,
                             tension: 0.3
                         },
                         {
-                            label: 'Lợi nhuận hàng tháng (VNĐ)',
+                            label: 'Monthly Profit (VND)', // English label
                             data: monthlyProfits,
                             borderColor: '#66BB6A',
                             backgroundColor: 'rgba(102, 187, 106, 0.2)',
@@ -800,7 +953,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Số tiền (VNĐ)'
+                                text: 'Amount (VND)' // English label
                             },
                             ticks: {
                                 callback: function(value) {
@@ -811,7 +964,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Tháng'
+                                text: 'Month' // English label
                             }
                         }
                     }
@@ -819,45 +972,53 @@
             });
         }
 
-        // Initialize display and data
         function initializeApp() {
+            const today = new Date().toISOString().slice(0, 10);
+            startDateFilter.value = today;
+            endDateFilter.value = today;
+
             showSection('section-tongquan');
-            calculateDailySummary();
+            calculateSummaryForDateRange();
             updateAllTables();
             updateProductDatalist();
             updateCharts();
+            updateSummaryKPIs();
         }
 
         // Helper function to convert array of objects to CSV string
         function convertToCsv(arr, headers = null) {
             if (!arr.length) return '';
-            const finalHeaders = headers || Object.keys(arr[0]);
+            const finalHeaders = headers || Object.keys(arr[0]); // Use provided headers or infer
             const headerRow = finalHeaders.map(h => {
                 if (typeof h === 'object' && h.label) return `"${h.label.replace(/"/g, '""')}"`;
-                return `"${h.replace(/"/g, '""')}"`;
+                return `"${String(h).replace(/"/g, '""')}"`;
             }).join(',');
 
             const rows = arr.map(row => finalHeaders.map(key => {
                 const actualKey = (typeof key === 'object' && key.key) ? key.key : key;
                 let value = row[actualKey];
-                if (actualKey === 'date' || actualKey === 'lastContact' || actualKey === 'nextFollowup') {
+
+                // Special formatting for dates
+                if (['date', 'lastContact', 'nextFollowup'].includes(actualKey)) {
                     value = formatDate(value);
-                } else if (actualKey === 'amount' || actualKey === 'price') {
-                    value = value; // Keep as number for CSV, formatting done in display
-                } else if (actualKey === 'type') {
-                    value = value === 'mua_thuc_pham' ? 'Mua thực phẩm' : 'Biến phí khác';
+                }
+                // Special formatting for expense type
+                else if (actualKey === 'type') {
+                    value = value === 'mua_thuc_pham' ? 'Food Purchase' : 'Other Variable Expense'; // English value
+                }
+                // Special formatting for currency or numbers (keep as raw number for CSV, let Excel format)
+                else if (['amount', 'price', 'quantity', 'purchasePrice', 'totalCost'].includes(actualKey)) {
+                    value = parseFloat(value); // Ensure it's a number
                 }
 
                 if (typeof value === 'string' && value.includes(',')) {
                     return `"${value.replace(/"/g, '""')}"`;
                 }
-                return value;
+                return String(value); // Convert all values to string for CSV
             }).join(','));
             return [headerRow, ...rows].join('\n');
         }
 
-
-        // Helper function to download a file
         function downloadFile(content, fileName, mimeType) {
             const blob = new Blob([content], { type: mimeType });
             const url = URL.createObjectURL(blob);
@@ -870,7 +1031,6 @@
             URL.revokeObjectURL(url);
         }
 
-        // Attach event listeners for edit/delete buttons
         function attachTableEventListeners(tbody, dataType) {
             tbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
@@ -885,7 +1045,77 @@
                     deleteItem(dataType, index);
                 });
             });
+
+            const table = tbody.closest('table');
+            if (table) {
+                const headers = table.querySelectorAll('th[data-sort-key]');
+                headers.forEach(header => {
+                    header.addEventListener('click', () => {
+                        const sortKey = header.dataset.sortKey;
+                        sortTable(dataType, sortKey);
+                    });
+                });
+            }
         }
+
+        let sortDirections = {};
+
+        function sortTable(dataType, sortKey) {
+            let dataArray;
+            let updateTableFunc;
+
+            switch (dataType) {
+                case 'customer':
+                    dataArray = customersData;
+                    updateTableFunc = updateCustomerTable;
+                    break;
+                case 'foodInventory':
+                    dataArray = foodInventoryData;
+                    updateTableFunc = updateFoodInventoryTable;
+                    break;
+                case 'otherExpense': // Updated
+                    dataArray = otherExpensesData;
+                    updateTableFunc = updateOtherExpenseTable;
+                    break;
+                case 'sale':
+                    dataArray = salesData;
+                    updateTableFunc = updateSalesTable;
+                    break;
+                case 'productItem':
+                    dataArray = productItemsData;
+                    updateTableFunc = updateProductItemsTable;
+                    break;
+                case 'purchaseHistory': // New
+                    dataArray = purchaseHistoryData;
+                    updateTableFunc = updatePurchaseHistoryTable;
+                    break;
+                default:
+                    return;
+            }
+
+            const currentDirection = sortDirections[`${dataType}-${sortKey}`] === 'asc' ? 'desc' : 'asc';
+
+            dataArray.sort((a, b) => {
+                let valA = a[sortKey];
+                let valB = b[sortKey];
+
+                if (sortKey.includes('date') || sortKey.includes('Contact') || sortKey.includes('Followup')) {
+                    valA = new Date(valA);
+                    valB = new Date(valB);
+                } else if (typeof valA === 'string') {
+                    valA = valA.toLowerCase();
+                    valB = valB.toLowerCase();
+                }
+
+                if (valA < valB) return currentDirection === 'asc' ? -1 : 1;
+                if (valA > valB) return currentDirection === 'asc' ? 1 : -1;
+                return 0;
+            });
+
+            sortDirections[`${dataType}-${sortKey}`] = currentDirection;
+            updateTableFunc();
+        }
+
 
         function editItem(dataType, index) {
             let dataArray;
@@ -914,16 +1144,27 @@
                     addBtn = document.getElementById('add-food-item-btn');
                     editingFoodInventoryIndex = index;
                     break;
-                case 'expense':
-                    dataArray = expensesData;
+                case 'otherExpense': // Updated
+                    dataArray = otherExpensesData;
                     formElements = {
-                        type: document.getElementById('expense-type'),
-                        description: document.getElementById('expense-description'),
-                        amount: document.getElementById('expense-amount'),
-                        date: document.getElementById('expense-date')
+                        description: document.getElementById('other-expense-description'),
+                        amount: document.getElementById('other-expense-amount'),
+                        date: document.getElementById('other-expense-date')
                     };
-                    addBtn = document.getElementById('add-expense-btn');
-                    editingExpenseIndex = index;
+                    addBtn = document.getElementById('add-other-expense-btn');
+                    editingOtherExpenseIndex = index;
+                    break;
+                case 'purchaseHistory': // New
+                    dataArray = purchaseHistoryData;
+                    formElements = {
+                        itemName: document.getElementById('purchase-item-name'),
+                        quantity: document.getElementById('purchase-quantity'),
+                        unit: document.getElementById('purchase-unit'),
+                        purchasePrice: document.getElementById('purchase-price-per-unit'),
+                        date: document.getElementById('purchase-date')
+                    };
+                    addBtn = document.getElementById('add-purchase-btn');
+                    editingPurchaseHistoryIndex = index;
                     break;
                 case 'sale':
                     dataArray = salesData;
@@ -936,7 +1177,7 @@
                     addBtn = document.getElementById('add-sale-btn');
                     editingSaleIndex = index;
                     break;
-                case 'productItem': // New case for product items
+                case 'productItem':
                     dataArray = productItemsData;
                     formElements = {
                         name: document.getElementById('product-item-name'),
@@ -961,7 +1202,7 @@
         }
 
         function deleteItem(dataType, index) {
-            if (!confirm('Bạn có chắc chắn muốn xóa mục này?')) return; // Confirmation for deletion
+            if (!confirm('Bạn có chắc chắn muốn xóa mục này?')) return;
 
             let dataArray;
             let updateTableFunc;
@@ -978,11 +1219,17 @@
                     dataArray = foodInventoryData;
                     updateTableFunc = updateFoodInventoryTable;
                     break;
-                case 'expense':
-                    dataArray = expensesData;
-                    updateTableFunc = updateExpenseTable;
+                case 'otherExpense': // Updated
+                    dataArray = otherExpensesData;
+                    updateTableFunc = updateOtherExpenseTable;
                     calculateSummaryNeeded = true;
                     updateChartsNeeded = true;
+                    break;
+                case 'purchaseHistory': // New
+                    dataArray = purchaseHistoryData;
+                    updateTableFunc = updatePurchaseHistoryTable;
+                    calculateSummaryNeeded = true; // Affects profit
+                    updateChartsNeeded = true; // Affects profit charts
                     break;
                 case 'sale':
                     dataArray = salesData;
@@ -990,7 +1237,7 @@
                     calculateSummaryNeeded = true;
                     updateChartsNeeded = true;
                     break;
-                case 'productItem': // New case for product items
+                case 'productItem':
                     dataArray = productItemsData;
                     updateTableFunc = updateProductItemsTable;
                     break;
@@ -1001,15 +1248,14 @@
             if (dataArray && index >= 0 && index < dataArray.length) {
                 dataArray.splice(index, 1);
                 updateTableFunc();
-                if (calculateSummaryNeeded) calculateDailySummary();
+                calculateSummaryForDateRange();
+                if (calculateSummaryNeeded) updateSummaryKPIs();
                 if (updateChartsNeeded) updateCharts();
-                updateProductDatalist(); // Update datalist if products are deleted
+                updateProductDatalist();
                 alert('Mục đã được xóa thành công!');
             }
         }
 
-
-        // Event Listeners for Forms
         document.getElementById('add-customer-btn').addEventListener('click', () => {
             const name = document.getElementById('customer-name').value.trim();
             const lastContact = document.getElementById('customer-last-contact').value;
@@ -1022,18 +1268,18 @@
                     customersData[editingCustomerIndex] = customer;
                     editingCustomerIndex = -1;
                     document.getElementById('add-customer-btn').textContent = 'Thêm khách hàng';
-                    alert('Thông tin khách hàng đã được cập nhật!');
+                    alert('Customer info updated successfully!');
                 } else {
                     customersData.push(customer);
-                    alert('Khách hàng đã được thêm!');
+                    alert('Customer added successfully!');
                 }
                 updateCustomerTable();
-                calculateDailySummary();
+                calculateSummaryForDateRange();
                 document.getElementById('customer-name').value = '';
                 document.getElementById('customer-last-contact').value = '';
                 document.getElementById('customer-next-followup').value = '';
             } else {
-                alert('Vui lòng điền đầy đủ thông tin khách hàng.');
+                alert('Please fill in all customer information.');
             }
         });
 
@@ -1048,51 +1294,97 @@
                     foodInventoryData[editingFoodInventoryIndex] = foodItem;
                     editingFoodInventoryIndex = -1;
                     document.getElementById('add-food-item-btn').textContent = 'Thêm/Cập nhật tồn kho';
-                    alert('Tồn kho thực phẩm đã được cập nhật!');
+                    alert('Food inventory updated successfully!');
                 } else {
-                    // If new item, add to productItemsData as well
                     if (!productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
                         productItemsData.push({ name: name, defaultUnit: unit });
                         updateProductItemsTable();
                         updateProductDatalist();
                     }
                     foodInventoryData.push(foodItem);
-                    alert('Tồn kho thực phẩm đã được thêm!');
+                    alert('Food inventory added successfully!');
                 }
                 updateFoodInventoryTable();
                 document.getElementById('food-item-name').value = '';
                 document.getElementById('food-item-quantity').value = '';
                 document.getElementById('food-item-unit').value = '';
+                updateCharts();
             } else {
-                alert('Vui lòng điền đầy đủ thông tin tồn kho.');
+                alert('Please fill in all food inventory information.');
             }
         });
 
-        document.getElementById('add-expense-btn').addEventListener('click', () => {
-            const type = document.getElementById('expense-type').value;
-            const description = document.getElementById('expense-description').value.trim();
-            const amount = parseFloat(document.getElementById('expense-amount').value);
-            const date = document.getElementById('expense-date').value;
+        document.getElementById('add-purchase-btn').addEventListener('click', () => { // New event listener
+            const itemName = document.getElementById('purchase-item-name').value.trim();
+            const quantity = parseFloat(document.getElementById('purchase-quantity').value);
+            const unit = document.getElementById('purchase-unit').value.trim();
+            const purchasePrice = parseFloat(document.getElementById('purchase-price-per-unit').value);
+            const date = document.getElementById('purchase-date').value;
+
+            if (itemName && !isNaN(quantity) && unit && !isNaN(purchasePrice) && date) {
+                const totalCost = quantity * purchasePrice;
+                const purchase = { itemName, quantity, unit, purchasePrice, date, totalCost };
+
+                if (editingPurchaseHistoryIndex > -1) {
+                    purchaseHistoryData[editingPurchaseHistoryIndex] = purchase;
+                    editingPurchaseHistoryIndex = -1;
+                    document.getElementById('add-purchase-btn').textContent = 'Thêm Giao dịch Mua';
+                    alert('Purchase transaction updated successfully!');
+                } else {
+                    if (!productItemsData.some(item => item.name.toLowerCase() === itemName.toLowerCase())) {
+                        productItemsData.push({ name: itemName, defaultUnit: unit });
+                        updateProductItemsTable();
+                        updateProductDatalist();
+                    }
+                    purchaseHistoryData.push(purchase);
+                    // Also update food inventory (simple add for now)
+                    const existingFoodItemIndex = foodInventoryData.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
+                    if (existingFoodItemIndex > -1) {
+                        foodInventoryData[existingFoodItemIndex].quantity += quantity;
+                    } else {
+                        foodInventoryData.push({ name: itemName, quantity: quantity, unit: unit });
+                    }
+                    updateFoodInventoryTable();
+                    alert('Purchase transaction added successfully!');
+                }
+                updatePurchaseHistoryTable();
+                calculateSummaryForDateRange();
+                updateCharts();
+                document.getElementById('purchase-item-name').value = '';
+                document.getElementById('purchase-quantity').value = '';
+                document.getElementById('purchase-unit').value = '';
+                document.getElementById('purchase-price-per-unit').value = '';
+                document.getElementById('purchase-date').value = '';
+            } else {
+                alert('Please fill in all purchase transaction information.');
+            }
+        });
+
+
+        document.getElementById('add-other-expense-btn').addEventListener('click', () => { // Updated
+            const description = document.getElementById('other-expense-description').value.trim();
+            const amount = parseFloat(document.getElementById('other-expense-amount').value);
+            const date = document.getElementById('other-expense-date').value;
 
             if (description && !isNaN(amount) && date) {
-                const expense = { type, description, amount, date };
-                if (editingExpenseIndex > -1) {
-                    expensesData[editingExpenseIndex] = expense;
-                    editingExpenseIndex = -1;
-                    document.getElementById('add-expense-btn').textContent = 'Thêm chi phí';
-                    alert('Chi phí đã được cập nhật!');
+                const expense = { description, amount, date };
+                if (editingOtherExpenseIndex > -1) {
+                    otherExpensesData[editingOtherExpenseIndex] = expense;
+                    editingOtherExpenseIndex = -1;
+                    document.getElementById('add-other-expense-btn').textContent = 'Thêm Biến phí';
+                    alert('Other expense updated successfully!');
                 } else {
-                    expensesData.push(expense);
-                    alert('Chi phí đã được thêm!');
+                    otherExpensesData.push(expense);
+                    alert('Other expense added successfully!');
                 }
-                updateExpenseTable();
-                calculateDailySummary();
+                updateOtherExpenseTable();
+                calculateSummaryForDateRange();
                 updateCharts();
-                document.getElementById('expense-description').value = '';
-                document.getElementById('expense-amount').value = '';
-                document.getElementById('expense-date').value = '';
+                document.getElementById('other-expense-description').value = '';
+                document.getElementById('other-expense-amount').value = '';
+                document.getElementById('other-expense-date').value = '';
             } else {
-                alert('Vui lòng điền đầy đủ thông tin chi phí.');
+                alert('Please fill in all other expense information.');
             }
         });
 
@@ -1108,30 +1400,28 @@
                     salesData[editingSaleIndex] = sale;
                     editingSaleIndex = -1;
                     document.getElementById('add-sale-btn').textContent = 'Thêm giao dịch';
-                    alert('Giao dịch bán hàng đã được cập nhật!');
+                    alert('Sales transaction updated successfully!');
                 } else {
-                    // If new item, add to productItemsData as well
                     if (!productItemsData.some(item => item.name.toLowerCase() === itemName.toLowerCase())) {
-                        productItemsData.push({ name: itemName, defaultUnit: '' }); // Default unit might be empty here
+                        productItemsData.push({ name: itemName, defaultUnit: '' });
                         updateProductItemsTable();
                         updateProductDatalist();
                     }
                     salesData.push(sale);
-                    alert('Giao dịch bán hàng đã được thêm!');
+                    alert('Sales transaction added successfully!');
                 }
                 updateSalesTable();
-                calculateDailySummary();
+                calculateSummaryForDateRange();
                 updateCharts();
                 document.getElementById('sale-item-name').value = '';
                 document.getElementById('sale-quantity').value = '';
                 document.getElementById('sale-price').value = '';
                 document.getElementById('sale-date').value = '';
             } else {
-                alert('Vui lòng điền đầy đủ thông tin bán hàng.');
+                alert('Please fill in all sales transaction information.');
             }
         });
 
-        // New: Add/Update Product Item
         document.getElementById('add-product-item-btn').addEventListener('click', () => {
             const name = document.getElementById('product-item-name').value.trim();
             const defaultUnit = document.getElementById('product-item-default-unit').value.trim();
@@ -1142,33 +1432,33 @@
                     productItemsData[editingProductItemIndex] = productItem;
                     editingProductItemIndex = -1;
                     document.getElementById('add-product-item-btn').textContent = 'Thêm Mặt hàng';
-                    alert('Mặt hàng đã được cập nhật!');
+                    alert('Product item updated successfully!');
                 } else {
-                    // Prevent duplicate item names
                     if (productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
-                        alert('Mặt hàng này đã tồn tại!');
+                        alert('This product item already exists!');
                         return;
                     }
                     productItemsData.push(productItem);
-                    alert('Mặt hàng đã được thêm!');
+                    alert('Product item added successfully!');
                 }
                 updateProductItemsTable();
                 updateProductDatalist();
                 document.getElementById('product-item-name').value = '';
                 document.getElementById('product-item-default-unit').value = '';
+                updateCharts();
             } else {
-                alert('Vui lòng điền tên mặt hàng.');
+                alert('Please fill in the product item name.');
             }
         });
 
-        // Export/Import functionality
         document.getElementById('export-all-data-json-btn').addEventListener('click', () => {
             const allData = {
                 salesData: salesData,
-                expensesData: expensesData,
+                otherExpensesData: otherExpensesData, // Updated
                 customersData: customersData,
                 foodInventoryData: foodInventoryData,
-                productItemsData: productItemsData // New: Include product items
+                productItemsData: productItemsData,
+                purchaseHistoryData: purchaseHistoryData // New
             };
             const jsonString = JSON.stringify(allData, null, 2);
             downloadFile(jsonString, 'business_data.json', 'application/json');
@@ -1187,78 +1477,176 @@
                 try {
                     const importedData = JSON.parse(e.target.result);
                     if (importedData.salesData) salesData = importedData.salesData;
-                    if (importedData.expensesData) expensesData = importedData.expensesData;
+                    if (importedData.otherExpensesData) otherExpensesData = importedData.otherExpensesData; // Updated
                     if (importedData.customersData) customersData = importedData.customersData;
                     if (importedData.foodInventoryData) foodInventoryData = importedData.foodInventoryData;
-                    if (importedData.productItemsData) productItemsData = importedData.productItemsData; // New: Import product items
+                    if (importedData.productItemsData) productItemsData = importedData.productItemsData;
+                    if (importedData.purchaseHistoryData) purchaseHistoryData = importedData.purchaseHistoryData; // New
 
                     localStorage.setItem('salesData', JSON.stringify(salesData));
-                    localStorage.setItem('expensesData', JSON.stringify(expensesData));
+                    localStorage.setItem('otherExpensesData', JSON.stringify(otherExpensesData)); // Updated
                     localStorage.setItem('customersData', JSON.stringify(customersData));
                     localStorage.setItem('foodInventoryData', JSON.stringify(foodInventoryData));
-                    localStorage.setItem('productItemsData', JSON.stringify(productItemsData)); // New: Save product items
+                    localStorage.setItem('productItemsData', JSON.stringify(productItemsData));
+                    localStorage.setItem('purchaseHistoryData', JSON.stringify(purchaseHistoryData)); // New
 
-                    initializeApp(); // Reinitialize to update all tables and charts
-                    alert('Dữ liệu đã được nhập thành công!');
+                    initializeApp();
+                    alert('Data imported successfully!');
                 } catch (error) {
-                    alert('Lỗi khi đọc file JSON. Vui lòng kiểm tra định dạng file.');
-                    console.error('Lỗi nhập dữ liệu:', error);
+                    alert('Error reading JSON file. Please check file format.');
+                    console.error('Error importing data:', error);
                 }
             };
             reader.readAsText(file);
-            event.target.value = ''; // Clear file input
+            event.target.value = '';
         });
+
+        document.getElementById('export-summary-csv-btn').addEventListener('click', () => { // New export button for summary
+            const start = startDateFilter.value ? new Date(startDateFilter.value) : null;
+            const end = endDateFilter.value ? new Date(endDateFilter.value) : null;
+
+            let filteredSales = salesData;
+            let filteredOtherExpenses = otherExpensesData;
+            let filteredPurchases = purchaseHistoryData;
+            let filteredCustomers = customersData;
+
+            if (start && end) {
+                filteredSales = salesData.filter(sale => {
+                    const saleDate = new Date(sale.date);
+                    return saleDate >= start && saleDate <= end;
+                });
+                filteredOtherExpenses = otherExpensesData.filter(expense => {
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate >= start && expenseDate <= end;
+                });
+                filteredPurchases = purchaseHistoryData.filter(purchase => {
+                    const purchaseDate = new Date(purchase.date);
+                    return purchaseDate >= start && purchaseDate <= end;
+                });
+                filteredCustomers = customersData.filter(customer => {
+                    const lastContactDate = new Date(customer.lastContact);
+                    return lastContactDate >= start && lastContactDate <= end;
+                });
+            } else if (start && !end) {
+                 filteredSales = salesData.filter(sale => new Date(sale.date) >= start);
+                 filteredOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) >= start);
+                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) >= start);
+                 filteredCustomers = customersData.filter(customer => new Date(customer.lastContact) >= start);
+            } else if (!start && end) {
+                 filteredSales = salesData.filter(sale => new Date(sale.date) <= end);
+                 filteredOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) <= end);
+                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) <= end);
+                 filteredCustomers = customersData.filter(customer => new Date(customer.lastContact) <= end);
+            }
+
+            const totalIncome = filteredSales.reduce((sum, sale) => sum + sale.price, 0);
+            const totalOtherExpense = filteredOtherExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const totalPurchaseCost = filteredPurchases.reduce((sum, purchase) => sum + purchase.totalCost, 0);
+            const estimatedProfit = totalIncome - totalOtherExpense - totalPurchaseCost;
+            const uniqueCustomers = new Set(filteredCustomers.map(c => c.name)).size;
+
+            const summaryData = [
+                {
+                    'Metric': 'Total Revenue',
+                    'Value': totalIncome
+                },
+                {
+                    'Metric': 'Customers Interacted',
+                    'Value': uniqueCustomers
+                },
+                {
+                    'Metric': 'Estimated Profit',
+                    'Value': estimatedProfit
+                },
+                {
+                    'Metric': 'Total Customers (Overall)',
+                    'Value': customersData.length
+                },
+                {
+                    'Metric': 'Total Product Items (Overall)',
+                    'Value': productItemsData.length
+                }
+            ];
+
+            if (start && end) {
+                summaryData.unshift({ 'Metric': 'Date Range', 'Value': `${formatDate(start.toISOString().slice(0,10))} - ${formatDate(end.toISOString().slice(0,10))}` });
+            } else if (start) {
+                summaryData.unshift({ 'Metric': 'Date Range', 'Value': `From ${formatDate(start.toISOString().slice(0,10))}` });
+            } else if (end) {
+                summaryData.unshift({ 'Metric': 'Date Range', 'Value': `Up to ${formatDate(end.toISOString().slice(0,10))}` });
+            }
+
+            const headers = [
+                { key: 'Metric', label: 'Metric' },
+                { key: 'Value', label: 'Value' }
+            ];
+            const csv = convertToCsv(summaryData, headers);
+            downloadFile(csv, 'overall_summary.csv', 'text/csv;charset=utf-8;');
+        });
+
 
         document.getElementById('export-customers-csv-btn').addEventListener('click', () => {
             const headers = [
-                { key: 'name', label: 'Tên Khách hàng' },
-                { key: 'lastContact', label: 'Ngày tương tác cuối' },
-                { key: 'nextFollowup', label: 'Ngày theo dõi tiếp' },
-                { key: 'status', label: 'Trạng thái' }
+                { key: 'name', label: 'Customer Name' },
+                { key: 'lastContact', label: 'Last Contact Date' },
+                { key: 'nextFollowup', label: 'Next Followup Date' },
+                { key: 'status', label: 'Status' }
             ];
             const csv = convertToCsv(customersData, headers);
-            downloadFile(csv, 'khach_hang.csv', 'text/csv');
+            downloadFile(csv, 'customers.csv', 'text/csv;charset=utf-8;');
         });
 
         document.getElementById('export-food-inventory-csv-btn').addEventListener('click', () => {
             const headers = [
-                { key: 'name', label: 'Tên Thực phẩm' },
-                { key: 'quantity', label: 'Số lượng' },
-                { key: 'unit', label: 'Đơn vị' }
+                { key: 'name', label: 'Food Item Name' },
+                { key: 'quantity', label: 'Quantity' },
+                { key: 'unit', label: 'Unit' }
             ];
             const csv = convertToCsv(foodInventoryData, headers);
-            downloadFile(csv, 'ton_kho_thuc_pham.csv', 'text/csv');
+            downloadFile(csv, 'food_inventory.csv', 'text/csv;charset=utf-8;');
         });
 
-        document.getElementById('export-expenses-csv-btn').addEventListener('click', () => {
+        document.getElementById('export-purchase-history-csv-btn').addEventListener('click', () => { // New CSV export
             const headers = [
-                { key: 'type', label: 'Loại' },
-                { key: 'description', label: 'Mô tả' },
-                { key: 'amount', label: 'Số tiền (VNĐ)' },
-                { key: 'date', label: 'Ngày' }
+                { key: 'itemName', label: 'Item Name' },
+                { key: 'quantity', label: 'Quantity' },
+                { key: 'unit', label: 'Unit' },
+                { key: 'purchasePrice', label: 'Unit Purchase Price' },
+                { key: 'totalCost', label: 'Total Cost' },
+                { key: 'date', label: 'Date' }
             ];
-            const csv = convertToCsv(expensesData, headers);
-            downloadFile(csv, 'chi_phi.csv', 'text/csv');
+            const csv = convertToCsv(purchaseHistoryData, headers);
+            downloadFile(csv, 'purchase_history.csv', 'text/csv;charset=utf-8;');
+        });
+
+        document.getElementById('export-other-expenses-csv-btn').addEventListener('click', () => { // Updated
+            const headers = [
+                { key: 'description', label: 'Description' },
+                { key: 'amount', label: 'Amount (VND)' },
+                { key: 'date', label: 'Date' }
+            ];
+            const csv = convertToCsv(otherExpensesData, headers);
+            downloadFile(csv, 'other_expenses.csv', 'text/csv;charset=utf-8;');
         });
 
         document.getElementById('export-sales-csv-btn').addEventListener('click', () => {
             const headers = [
-                { key: 'date', label: 'Ngày' },
-                { key: 'itemName', label: 'Sản phẩm/Dịch vụ' },
-                { key: 'quantity', label: 'Số lượng' },
-                { key: 'price', label: 'Doanh thu (VNĐ)' }
+                { key: 'date', label: 'Date' },
+                { key: 'itemName', label: 'Product/Service Name' },
+                { key: 'quantity', label: 'Quantity' },
+                { key: 'price', label: 'Revenue (VND)' }
             ];
             const csv = convertToCsv(salesData, headers);
-            downloadFile(csv, 'doanh_thu.csv', 'text/csv');
+            downloadFile(csv, 'sales.csv', 'text/csv;charset=utf-8;');
         });
 
         document.getElementById('export-product-items-csv-btn').addEventListener('click', () => {
             const headers = [
-                { key: 'name', label: 'Tên Mặt hàng' },
-                { key: 'defaultUnit', label: 'Đơn vị mặc định' }
+                { key: 'name', label: 'Item Name' },
+                { key: 'defaultUnit', label: 'Default Unit' }
             ];
             const csv = convertToCsv(productItemsData, headers);
-            downloadFile(csv, 'danh_muc_mat_hang.csv', 'text/csv');
+            downloadFile(csv, 'product_items.csv', 'text/csv;charset=utf-8;');
         });
 
 
@@ -1269,6 +1657,11 @@
                 showSection(sectionId);
             });
         });
+
+        // Event listeners for date filters and low stock threshold
+        startDateFilter.addEventListener('change', calculateSummaryForDateRange);
+        endDateFilter.addEventListener('change', calculateSummaryForDateRange);
+        lowStockThresholdInput.addEventListener('change', updateFoodInventoryTable);
 
         initializeApp();
     </script>
