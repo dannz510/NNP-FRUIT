@@ -51,7 +51,7 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
     <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (khách hàng, thực phẩm, tài chính, quản lý dữ liệu) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác đơn giản như thêm dữ liệu, lọc, hoặc xuất/nhập. -->
+    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (tổng quan, khách hàng, thực phẩm, tài chính, mặt hàng, quản lý dữ liệu) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác như thêm, chỉnh sửa, xóa, xuất/nhập và sử dụng datalist cho các trường nhập liệu. -->
     <!-- Visualization & Content Choices:
     - Tổng quan:
         - Mục tiêu: Hiển thị tổng quan nhanh về hiệu suất hàng ngày.
@@ -62,21 +62,27 @@
     - Khách hàng:
         - Mục tiêu: Quản lý và theo dõi thông tin tương tác với khách hàng.
         - Viz/Presentation: Bảng dữ liệu (HTML table) với các trường "Tên khách hàng", "Ngày tương tác cuối", "Ngày theo dõi tiếp theo", "Trạng thái". Form nhập liệu đơn giản.
-        - Tương tác: Thêm khách hàng mới, cập nhật trạng thái theo dõi, xuất CSV.
+        - Tương tác: Thêm khách hàng mới, cập nhật trạng thái theo dõi, xuất CSV, chỉnh sửa, xóa.
         - Lý do: Định dạng bảng là hiệu quả nhất để xem và quản lý dữ liệu bản ghi riêng lẻ.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Thực phẩm & Kho:
         - Mục tiêu: Theo dõi tồn kho thực phẩm, quản lý chi phí mua hàng và biến phí.
-        - Viz/Presentation: Hai bảng riêng biệt: "Tồn kho thực phẩm" và "Nhập/Mua hàng & Biến phí". Các trường tương ứng với thông tin được yêu cầu.
-        - Tương tác: Thêm/sửa/xóa các mục, xem lịch sử mua hàng, xuất CSV.
+        - Viz/Presentation: Hai bảng riêng biệt: "Tồn kho thực phẩm" và "Nhập/Mua hàng & Biến phí". Các trường tương ứng với thông tin được yêu cầu. Datalist cho tên thực phẩm.
+        - Tương tác: Thêm/cập nhật/xóa các mục, xem lịch sử mua hàng, xuất CSV, chỉnh sửa.
         - Lý do: Giúp người dùng dễ dàng theo dõi chi tiết về vật tư và chi phí vận hành.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Tài chính:
         - Mục tiêu: Cung cấp cái nhìn chi tiết về doanh thu, chi phí và lợi nhuận.
-        - Viz/Presentation: Bảng "Doanh thu chi tiết" và bảng "Tổng quan Lợi nhuận". Biểu đồ đường (Chart.js) để minh họa xu hướng doanh thu và lợi nhuận hàng tháng.
-        - Tương tác: Lọc theo ngày/tháng, xem dữ liệu tổng hợp, xuất CSV.
+        - Viz/Presentation: Bảng "Doanh thu chi tiết" và bảng "Tổng quan Lợi nhuận". Biểu đồ đường (Chart.js) để minh họa xu hướng doanh thu và lợi nhuận hàng tháng. Datalist cho tên sản phẩm/dịch vụ.
+        - Tương tác: Lọc theo ngày/tháng, xem dữ liệu tổng hợp, xuất CSV, chỉnh sửa, xóa.
         - Lý do: Kết hợp dữ liệu chi tiết với biểu đồ xu hướng giúp người dùng phân tích hiệu quả tài chính.
         - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind), Vanilla JS.
+    - Quản lý Mặt hàng:
+        - Mục tiêu: Tạo và quản lý danh sách các mặt hàng/sản phẩm có sẵn tại cửa hàng.
+        - Viz/Presentation: Bảng dữ liệu với các trường "Tên mặt hàng", "Đơn vị mặc định". Form nhập liệu.
+        - Tương tác: Thêm mặt hàng mới, chỉnh sửa, xóa mặt hàng.
+        - Lý do: Cung cấp nguồn dữ liệu chuẩn cho các phần khác, tăng tính nhất quán và tiện lợi khi nhập liệu.
+        - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Quản lý Dữ liệu:
         - Mục tiêu: Cung cấp các công cụ để sao lưu và khôi phục dữ liệu người dùng.
         - Viz/Presentation: Nút (buttons) cho chức năng xuất dữ liệu (JSON tổng hợp), và một input file + nút để nhập dữ liệu (JSON tổng hợp).
@@ -85,8 +91,8 @@
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS (JSON.stringify, Blob, FileReader).
     - Giao diện người dùng (UI):
         - Mục tiêu: Đảm bảo trải nghiệm người dùng trực quan, dễ sử dụng, và hiển thị đẹp mắt trên mọi thiết bị.
-        - Phương pháp trình bày: Bố cục đáp ứng (Tailwind CSS Flexbox/Grid), thanh điều hướng bên trái, khu vực nội dung chính. Các nút, dropdown cho tương tác.
-        - Tương tác: Chuyển đổi giữa các phần, nhập dữ liệu.
+        - Phương pháp trình bày: Bố cục đáp ứng (Tailwind CSS Flexbox/Grid), thanh điều hướng bên trái, khu vực nội dung chính. Các nút, dropdown, datalist cho tương tác.
+        - Tương tác: Chuyển đổi giữa các phần, nhập/sửa/xóa dữ liệu.
         - Lý do: Cấu trúc SPA rõ ràng giúp người dùng tập trung vào từng phần dữ liệu mà không bị phân tâm.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     -->
@@ -114,6 +120,11 @@
             <li>
                 <button id="nav-taichinh" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Tài chính
+                </button>
+            </li>
+            <li>
+                <button id="nav-quanlymathang" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                    Quản lý Mặt hàng
                 </button>
             </li>
             <li>
@@ -190,7 +201,8 @@
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Khách hàng</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày tương tác cuối</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày theo dõi tiếp</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Trạng thái</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Trạng thái</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
                     <tbody id="customer-table-body">
@@ -211,7 +223,8 @@
                 <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
                     <h3 class="text-lg font-semibold text-gray-700 mb-3">Tồn kho thực phẩm</h3>
                     <div class="grid grid-cols-1 gap-4 mb-4">
-                        <input type="text" id="food-item-name" placeholder="Tên thực phẩm" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <input type="text" id="food-item-name" list="product-names-list" placeholder="Tên thực phẩm" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <datalist id="product-names-list"></datalist>
                         <div class="flex gap-2">
                             <input type="number" id="food-item-quantity" placeholder="Số lượng" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
                             <input type="text" id="food-item-unit" placeholder="Đơn vị (kg, lít, cái...)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
@@ -224,7 +237,8 @@
                                 <tr>
                                     <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Thực phẩm</th>
                                     <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số lượng</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Đơn vị</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Đơn vị</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody id="food-inventory-table-body">
@@ -255,7 +269,8 @@
                                     <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Loại</th>
                                     <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Mô tả</th>
                                     <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số tiền (VNĐ)</th>
-                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Ngày</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                                 </tr>
                             </thead>
                             <tbody id="expense-table-body">
@@ -276,7 +291,7 @@
             <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
                 <h3 class="text-lg font-semibold text-gray-700 mb-3">Thêm giao dịch bán hàng</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                    <input type="text" id="sale-item-name" placeholder="Tên sản phẩm/dịch vụ" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="text" id="sale-item-name" list="product-names-list" placeholder="Tên sản phẩm/dịch vụ" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                     <input type="number" id="sale-quantity" placeholder="Số lượng bán" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                     <input type="number" id="sale-price" placeholder="Doanh thu (VNĐ)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
                 </div>
@@ -292,7 +307,8 @@
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Ngày</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Sản phẩm/Dịch vụ</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số lượng</th>
-                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Doanh thu (VNĐ)</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Doanh thu (VNĐ)</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
                     <tbody id="sales-table-body">
@@ -309,6 +325,37 @@
                         <canvas id="monthlyFinancialChart"></canvas>
                     </div>
                 </div>
+            </div>
+        </section>
+
+        <!-- Quản lý Mặt hàng Section -->
+        <section id="section-quanlymathang" class="content-section hidden bg-white p-6 shadow-lg rounded-xl mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Quản lý Mặt hàng</h2>
+            <p class="text-gray-600 mb-6">Định nghĩa và quản lý danh sách các mặt hàng/sản phẩm có sẵn trong cửa hàng của bạn. Danh sách này sẽ được sử dụng để nhập liệu trong các phần khác.</p>
+
+            <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">Thêm Mặt hàng mới</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <input type="text" id="product-item-name" placeholder="Tên mặt hàng" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="text" id="product-item-default-unit" placeholder="Đơn vị mặc định (ví dụ: kg, lít, cái)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <button id="add-product-item-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm Mặt hàng</button>
+            </div>
+
+            <div class="overflow-x-auto rounded-lg shadow-md">
+                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Mặt hàng</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Đơn vị mặc định</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="product-items-table-body">
+                        <!-- Product items data will be inserted here -->
+                    </tbody>
+                </table>
+                <button id="export-product-items-csv-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition duration-200 ease-in-out w-full">Xuất CSV Mặt hàng</button>
             </div>
         </section>
 
@@ -342,10 +389,17 @@
         let expensesData = JSON.parse(localStorage.getItem('expensesData')) || [];
         let customersData = JSON.parse(localStorage.getItem('customersData')) || [];
         let foodInventoryData = JSON.parse(localStorage.getItem('foodInventoryData')) || [];
+        let productItemsData = JSON.parse(localStorage.getItem('productItemsData')) || []; // New: Master list of products
 
         let dailyIncomeChartInstance;
         let profitByFoodChartInstance;
         let monthlyFinancialChartInstance;
+
+        let editingCustomerIndex = -1;
+        let editingFoodInventoryIndex = -1;
+        let editingExpenseIndex = -1;
+        let editingSaleIndex = -1;
+        let editingProductItemIndex = -1;
 
         function showSection(sectionId) {
             contentSections.forEach(section => {
@@ -360,6 +414,8 @@
             });
             document.getElementById(`nav-${sectionId.replace('section-', '')}`).classList.add('active');
 
+            updateAllTables(); // Update all tables when section changes
+            updateProductDatalist(); // Ensure datalist is updated
             updateCharts();
         }
 
@@ -395,56 +451,117 @@
         function updateCustomerTable() {
             const tbody = document.getElementById('customer-table-body');
             tbody.innerHTML = '';
-            customersData.forEach(customer => {
+            customersData.forEach((customer, index) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = customer.name;
                 row.insertCell().textContent = formatDate(customer.lastContact);
                 row.insertCell().textContent = formatDate(customer.nextFollowup);
                 row.insertCell().textContent = customer.status;
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                `;
             });
             localStorage.setItem('customersData', JSON.stringify(customersData));
+            attachTableEventListeners(tbody, 'customer');
         }
 
         function updateFoodInventoryTable() {
             const tbody = document.getElementById('food-inventory-table-body');
             tbody.innerHTML = '';
-            foodInventoryData.forEach(item => {
+            foodInventoryData.forEach((item, index) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = item.name;
                 row.insertCell().textContent = item.quantity;
                 row.insertCell().textContent = item.unit;
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                `;
             });
             localStorage.setItem('foodInventoryData', JSON.stringify(foodInventoryData));
+            attachTableEventListeners(tbody, 'foodInventory');
         }
 
         function updateExpenseTable() {
             const tbody = document.getElementById('expense-table-body');
             tbody.innerHTML = '';
-            expensesData.forEach(expense => {
+            expensesData.forEach((expense, index) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = expense.type === 'mua_thuc_pham' ? 'Mua thực phẩm' : 'Biến phí khác';
                 row.insertCell().textContent = expense.description;
                 row.insertCell().textContent = formatCurrency(expense.amount);
                 row.insertCell().textContent = formatDate(expense.date);
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                `;
             });
             localStorage.setItem('expensesData', JSON.stringify(expensesData));
+            attachTableEventListeners(tbody, 'expense');
         }
 
         function updateSalesTable() {
             const tbody = document.getElementById('sales-table-body');
             tbody.innerHTML = '';
-            salesData.forEach(sale => {
+            salesData.forEach((sale, index) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = formatDate(sale.date);
                 row.insertCell().textContent = sale.itemName;
                 row.insertCell().textContent = sale.quantity;
                 row.insertCell().textContent = formatCurrency(sale.price);
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                `;
             });
             localStorage.setItem('salesData', JSON.stringify(salesData));
+            attachTableEventListeners(tbody, 'sale');
+        }
+
+        // New: Update Product Items Table
+        function updateProductItemsTable() {
+            const tbody = document.getElementById('product-items-table-body');
+            tbody.innerHTML = '';
+            productItemsData.forEach((item, index) => {
+                const row = tbody.insertRow();
+                row.className = 'border-b border-gray-100 last:border-b-0';
+                row.insertCell().textContent = item.name;
+                row.insertCell().textContent = item.defaultUnit;
+                const actionCell = row.insertCell();
+                actionCell.innerHTML = `
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                `;
+            });
+            localStorage.setItem('productItemsData', JSON.stringify(productItemsData));
+            attachTableEventListeners(tbody, 'productItem');
+        }
+
+        function updateProductDatalist() {
+            const datalist = document.getElementById('product-names-list');
+            datalist.innerHTML = '';
+            productItemsData.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.name;
+                datalist.appendChild(option);
+            });
+        }
+
+        function updateAllTables() {
+            updateCustomerTable();
+            updateFoodInventoryTable();
+            updateExpenseTable();
+            updateSalesTable();
+            updateProductItemsTable(); // New: Update product items table
         }
 
         function updateCharts() {
@@ -459,7 +576,7 @@
 
         function wrapLabels(label, index, labels) {
             const MAX_CHAR_PER_LINE = 16;
-            if (label.length > MAX_CHAR_PER_LINE) {
+            if (label && label.length > MAX_CHAR_PER_LINE) {
                 const words = label.split(' ');
                 let lines = [];
                 let currentLine = '';
@@ -633,7 +750,7 @@
             const sortedMonths = Object.keys(monthlyData).sort();
             const monthlyIncomes = sortedMonths.map(month => monthlyData[month].income);
             const monthlyExpenses = sortedMonths.map(month => monthlyData[month].expenses);
-            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyData[month].expenses);
+            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyData[month].expenses); // Fixed line here: changed .month to .expenses and added missing closing parenthesis
 
             monthlyFinancialChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -706,26 +823,39 @@
         function initializeApp() {
             showSection('section-tongquan');
             calculateDailySummary();
-            updateCustomerTable();
-            updateFoodInventoryTable();
-            updateExpenseTable();
-            updateSalesTable();
+            updateAllTables();
+            updateProductDatalist();
             updateCharts();
         }
 
         // Helper function to convert array of objects to CSV string
-        function convertToCsv(arr) {
+        function convertToCsv(arr, headers = null) {
             if (!arr.length) return '';
-            const header = Object.keys(arr[0]).join(',');
-            const rows = arr.map(row => Object.values(row).map(value => {
-                // Ensure values with commas are quoted
+            const finalHeaders = headers || Object.keys(arr[0]);
+            const headerRow = finalHeaders.map(h => {
+                if (typeof h === 'object' && h.label) return `"${h.label.replace(/"/g, '""')}"`;
+                return `"${h.replace(/"/g, '""')}"`;
+            }).join(',');
+
+            const rows = arr.map(row => finalHeaders.map(key => {
+                const actualKey = (typeof key === 'object' && key.key) ? key.key : key;
+                let value = row[actualKey];
+                if (actualKey === 'date' || actualKey === 'lastContact' || actualKey === 'nextFollowup') {
+                    value = formatDate(value);
+                } else if (actualKey === 'amount' || actualKey === 'price') {
+                    value = value; // Keep as number for CSV, formatting done in display
+                } else if (actualKey === 'type') {
+                    value = value === 'mua_thuc_pham' ? 'Mua thực phẩm' : 'Biến phí khác';
+                }
+
                 if (typeof value === 'string' && value.includes(',')) {
                     return `"${value.replace(/"/g, '""')}"`;
                 }
                 return value;
             }).join(','));
-            return [header, ...rows].join('\n');
+            return [headerRow, ...rows].join('\n');
         }
+
 
         // Helper function to download a file
         function downloadFile(content, fileName, mimeType) {
@@ -740,13 +870,144 @@
             URL.revokeObjectURL(url);
         }
 
-        // Event Listeners for Navigation
-        navItems.forEach(item => {
-            item.addEventListener('click', () => {
-                const sectionId = `section-${item.id.replace('nav-', '')}`;
-                showSection(sectionId);
+        // Attach event listeners for edit/delete buttons
+        function attachTableEventListeners(tbody, dataType) {
+            tbody.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const index = parseInt(event.target.dataset.index);
+                    editItem(dataType, index);
+                });
             });
-        });
+
+            tbody.querySelectorAll('.delete-btn').forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const index = parseInt(event.target.dataset.index);
+                    deleteItem(dataType, index);
+                });
+            });
+        }
+
+        function editItem(dataType, index) {
+            let dataArray;
+            let formElements;
+            let addBtn;
+
+            switch (dataType) {
+                case 'customer':
+                    dataArray = customersData;
+                    formElements = {
+                        name: document.getElementById('customer-name'),
+                        lastContact: document.getElementById('customer-last-contact'),
+                        nextFollowup: document.getElementById('customer-next-followup'),
+                        status: document.getElementById('customer-status')
+                    };
+                    addBtn = document.getElementById('add-customer-btn');
+                    editingCustomerIndex = index;
+                    break;
+                case 'foodInventory':
+                    dataArray = foodInventoryData;
+                    formElements = {
+                        name: document.getElementById('food-item-name'),
+                        quantity: document.getElementById('food-item-quantity'),
+                        unit: document.getElementById('food-item-unit')
+                    };
+                    addBtn = document.getElementById('add-food-item-btn');
+                    editingFoodInventoryIndex = index;
+                    break;
+                case 'expense':
+                    dataArray = expensesData;
+                    formElements = {
+                        type: document.getElementById('expense-type'),
+                        description: document.getElementById('expense-description'),
+                        amount: document.getElementById('expense-amount'),
+                        date: document.getElementById('expense-date')
+                    };
+                    addBtn = document.getElementById('add-expense-btn');
+                    editingExpenseIndex = index;
+                    break;
+                case 'sale':
+                    dataArray = salesData;
+                    formElements = {
+                        itemName: document.getElementById('sale-item-name'),
+                        quantity: document.getElementById('sale-quantity'),
+                        price: document.getElementById('sale-price'),
+                        date: document.getElementById('sale-date')
+                    };
+                    addBtn = document.getElementById('add-sale-btn');
+                    editingSaleIndex = index;
+                    break;
+                case 'productItem': // New case for product items
+                    dataArray = productItemsData;
+                    formElements = {
+                        name: document.getElementById('product-item-name'),
+                        defaultUnit: document.getElementById('product-item-default-unit')
+                    };
+                    addBtn = document.getElementById('add-product-item-btn');
+                    editingProductItemIndex = index;
+                    break;
+                default:
+                    return;
+            }
+
+            const item = dataArray[index];
+            if (item) {
+                for (const key in formElements) {
+                    if (formElements[key]) {
+                        formElements[key].value = item[key];
+                    }
+                }
+                addBtn.textContent = 'Cập nhật';
+            }
+        }
+
+        function deleteItem(dataType, index) {
+            if (!confirm('Bạn có chắc chắn muốn xóa mục này?')) return; // Confirmation for deletion
+
+            let dataArray;
+            let updateTableFunc;
+            let calculateSummaryNeeded = false;
+            let updateChartsNeeded = false;
+
+            switch (dataType) {
+                case 'customer':
+                    dataArray = customersData;
+                    updateTableFunc = updateCustomerTable;
+                    calculateSummaryNeeded = true;
+                    break;
+                case 'foodInventory':
+                    dataArray = foodInventoryData;
+                    updateTableFunc = updateFoodInventoryTable;
+                    break;
+                case 'expense':
+                    dataArray = expensesData;
+                    updateTableFunc = updateExpenseTable;
+                    calculateSummaryNeeded = true;
+                    updateChartsNeeded = true;
+                    break;
+                case 'sale':
+                    dataArray = salesData;
+                    updateTableFunc = updateSalesTable;
+                    calculateSummaryNeeded = true;
+                    updateChartsNeeded = true;
+                    break;
+                case 'productItem': // New case for product items
+                    dataArray = productItemsData;
+                    updateTableFunc = updateProductItemsTable;
+                    break;
+                default:
+                    return;
+            }
+
+            if (dataArray && index >= 0 && index < dataArray.length) {
+                dataArray.splice(index, 1);
+                updateTableFunc();
+                if (calculateSummaryNeeded) calculateDailySummary();
+                if (updateChartsNeeded) updateCharts();
+                updateProductDatalist(); // Update datalist if products are deleted
+                alert('Mục đã được xóa thành công!');
+            }
+        }
+
 
         // Event Listeners for Forms
         document.getElementById('add-customer-btn').addEventListener('click', () => {
@@ -756,14 +1017,23 @@
             const status = document.getElementById('customer-status').value;
 
             if (name && lastContact && nextFollowup) {
-                customersData.push({ name, lastContact, nextFollowup, status });
+                const customer = { name, lastContact, nextFollowup, status };
+                if (editingCustomerIndex > -1) {
+                    customersData[editingCustomerIndex] = customer;
+                    editingCustomerIndex = -1;
+                    document.getElementById('add-customer-btn').textContent = 'Thêm khách hàng';
+                    alert('Thông tin khách hàng đã được cập nhật!');
+                } else {
+                    customersData.push(customer);
+                    alert('Khách hàng đã được thêm!');
+                }
                 updateCustomerTable();
                 calculateDailySummary();
                 document.getElementById('customer-name').value = '';
                 document.getElementById('customer-last-contact').value = '';
                 document.getElementById('customer-next-followup').value = '';
             } else {
-                console.log('Vui lòng điền đầy đủ thông tin khách hàng.');
+                alert('Vui lòng điền đầy đủ thông tin khách hàng.');
             }
         });
 
@@ -773,19 +1043,28 @@
             const unit = document.getElementById('food-item-unit').value.trim();
 
             if (name && !isNaN(quantity) && unit) {
-                const existingItemIndex = foodInventoryData.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
-                if (existingItemIndex > -1) {
-                    foodInventoryData[existingItemIndex].quantity += quantity;
-                    foodInventoryData[existingItemIndex].unit = unit;
+                const foodItem = { name, quantity, unit };
+                if (editingFoodInventoryIndex > -1) {
+                    foodInventoryData[editingFoodInventoryIndex] = foodItem;
+                    editingFoodInventoryIndex = -1;
+                    document.getElementById('add-food-item-btn').textContent = 'Thêm/Cập nhật tồn kho';
+                    alert('Tồn kho thực phẩm đã được cập nhật!');
                 } else {
-                    foodInventoryData.push({ name, quantity, unit });
+                    // If new item, add to productItemsData as well
+                    if (!productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+                        productItemsData.push({ name: name, defaultUnit: unit });
+                        updateProductItemsTable();
+                        updateProductDatalist();
+                    }
+                    foodInventoryData.push(foodItem);
+                    alert('Tồn kho thực phẩm đã được thêm!');
                 }
                 updateFoodInventoryTable();
                 document.getElementById('food-item-name').value = '';
                 document.getElementById('food-item-quantity').value = '';
                 document.getElementById('food-item-unit').value = '';
             } else {
-                console.log('Vui lòng điền đầy đủ thông tin tồn kho.');
+                alert('Vui lòng điền đầy đủ thông tin tồn kho.');
             }
         });
 
@@ -796,7 +1075,16 @@
             const date = document.getElementById('expense-date').value;
 
             if (description && !isNaN(amount) && date) {
-                expensesData.push({ type, description, amount, date });
+                const expense = { type, description, amount, date };
+                if (editingExpenseIndex > -1) {
+                    expensesData[editingExpenseIndex] = expense;
+                    editingExpenseIndex = -1;
+                    document.getElementById('add-expense-btn').textContent = 'Thêm chi phí';
+                    alert('Chi phí đã được cập nhật!');
+                } else {
+                    expensesData.push(expense);
+                    alert('Chi phí đã được thêm!');
+                }
                 updateExpenseTable();
                 calculateDailySummary();
                 updateCharts();
@@ -804,7 +1092,7 @@
                 document.getElementById('expense-amount').value = '';
                 document.getElementById('expense-date').value = '';
             } else {
-                console.log('Vui lòng điền đầy đủ thông tin chi phí.');
+                alert('Vui lòng điền đầy đủ thông tin chi phí.');
             }
         });
 
@@ -815,7 +1103,22 @@
             const date = document.getElementById('sale-date').value;
 
             if (itemName && !isNaN(quantity) && !isNaN(price) && date) {
-                salesData.push({ itemName, quantity, price, date });
+                const sale = { itemName, quantity, price, date };
+                if (editingSaleIndex > -1) {
+                    salesData[editingSaleIndex] = sale;
+                    editingSaleIndex = -1;
+                    document.getElementById('add-sale-btn').textContent = 'Thêm giao dịch';
+                    alert('Giao dịch bán hàng đã được cập nhật!');
+                } else {
+                    // If new item, add to productItemsData as well
+                    if (!productItemsData.some(item => item.name.toLowerCase() === itemName.toLowerCase())) {
+                        productItemsData.push({ name: itemName, defaultUnit: '' }); // Default unit might be empty here
+                        updateProductItemsTable();
+                        updateProductDatalist();
+                    }
+                    salesData.push(sale);
+                    alert('Giao dịch bán hàng đã được thêm!');
+                }
                 updateSalesTable();
                 calculateDailySummary();
                 updateCharts();
@@ -824,7 +1127,37 @@
                 document.getElementById('sale-price').value = '';
                 document.getElementById('sale-date').value = '';
             } else {
-                console.log('Vui lòng điền đầy đủ thông tin bán hàng.');
+                alert('Vui lòng điền đầy đủ thông tin bán hàng.');
+            }
+        });
+
+        // New: Add/Update Product Item
+        document.getElementById('add-product-item-btn').addEventListener('click', () => {
+            const name = document.getElementById('product-item-name').value.trim();
+            const defaultUnit = document.getElementById('product-item-default-unit').value.trim();
+
+            if (name) {
+                const productItem = { name, defaultUnit };
+                if (editingProductItemIndex > -1) {
+                    productItemsData[editingProductItemIndex] = productItem;
+                    editingProductItemIndex = -1;
+                    document.getElementById('add-product-item-btn').textContent = 'Thêm Mặt hàng';
+                    alert('Mặt hàng đã được cập nhật!');
+                } else {
+                    // Prevent duplicate item names
+                    if (productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
+                        alert('Mặt hàng này đã tồn tại!');
+                        return;
+                    }
+                    productItemsData.push(productItem);
+                    alert('Mặt hàng đã được thêm!');
+                }
+                updateProductItemsTable();
+                updateProductDatalist();
+                document.getElementById('product-item-name').value = '';
+                document.getElementById('product-item-default-unit').value = '';
+            } else {
+                alert('Vui lòng điền tên mặt hàng.');
             }
         });
 
@@ -834,7 +1167,8 @@
                 salesData: salesData,
                 expensesData: expensesData,
                 customersData: customersData,
-                foodInventoryData: foodInventoryData
+                foodInventoryData: foodInventoryData,
+                productItemsData: productItemsData // New: Include product items
             };
             const jsonString = JSON.stringify(allData, null, 2);
             downloadFile(jsonString, 'business_data.json', 'application/json');
@@ -856,52 +1190,85 @@
                     if (importedData.expensesData) expensesData = importedData.expensesData;
                     if (importedData.customersData) customersData = importedData.customersData;
                     if (importedData.foodInventoryData) foodInventoryData = importedData.foodInventoryData;
+                    if (importedData.productItemsData) productItemsData = importedData.productItemsData; // New: Import product items
 
                     localStorage.setItem('salesData', JSON.stringify(salesData));
                     localStorage.setItem('expensesData', JSON.stringify(expensesData));
                     localStorage.setItem('customersData', JSON.stringify(customersData));
                     localStorage.setItem('foodInventoryData', JSON.stringify(foodInventoryData));
+                    localStorage.setItem('productItemsData', JSON.stringify(productItemsData)); // New: Save product items
 
                     initializeApp(); // Reinitialize to update all tables and charts
-                    alert('Dữ liệu đã được nhập thành công!'); // Using alert for simple feedback, consider custom modal for production
+                    alert('Dữ liệu đã được nhập thành công!');
                 } catch (error) {
-                    alert('Lỗi khi đọc file JSON. Vui lòng kiểm tra định dạng file.'); // Using alert for simple feedback
+                    alert('Lỗi khi đọc file JSON. Vui lòng kiểm tra định dạng file.');
                     console.error('Lỗi nhập dữ liệu:', error);
                 }
             };
             reader.readAsText(file);
+            event.target.value = ''; // Clear file input
         });
 
         document.getElementById('export-customers-csv-btn').addEventListener('click', () => {
-            const csv = convertToCsv(customersData);
+            const headers = [
+                { key: 'name', label: 'Tên Khách hàng' },
+                { key: 'lastContact', label: 'Ngày tương tác cuối' },
+                { key: 'nextFollowup', label: 'Ngày theo dõi tiếp' },
+                { key: 'status', label: 'Trạng thái' }
+            ];
+            const csv = convertToCsv(customersData, headers);
             downloadFile(csv, 'khach_hang.csv', 'text/csv');
         });
 
         document.getElementById('export-food-inventory-csv-btn').addEventListener('click', () => {
-            const csv = convertToCsv(foodInventoryData);
+            const headers = [
+                { key: 'name', label: 'Tên Thực phẩm' },
+                { key: 'quantity', label: 'Số lượng' },
+                { key: 'unit', label: 'Đơn vị' }
+            ];
+            const csv = convertToCsv(foodInventoryData, headers);
             downloadFile(csv, 'ton_kho_thuc_pham.csv', 'text/csv');
         });
 
         document.getElementById('export-expenses-csv-btn').addEventListener('click', () => {
-            const csv = convertToCsv(expensesData.map(exp => ({
-                type: exp.type === 'mua_thuc_pham' ? 'Mua thực phẩm' : 'Biến phí khác',
-                description: exp.description,
-                amount: exp.amount,
-                date: formatDate(exp.date)
-            })));
+            const headers = [
+                { key: 'type', label: 'Loại' },
+                { key: 'description', label: 'Mô tả' },
+                { key: 'amount', label: 'Số tiền (VNĐ)' },
+                { key: 'date', label: 'Ngày' }
+            ];
+            const csv = convertToCsv(expensesData, headers);
             downloadFile(csv, 'chi_phi.csv', 'text/csv');
         });
 
         document.getElementById('export-sales-csv-btn').addEventListener('click', () => {
-            const csv = convertToCsv(salesData.map(sale => ({
-                date: formatDate(sale.date),
-                itemName: sale.itemName,
-                quantity: sale.quantity,
-                price: sale.price
-            })));
+            const headers = [
+                { key: 'date', label: 'Ngày' },
+                { key: 'itemName', label: 'Sản phẩm/Dịch vụ' },
+                { key: 'quantity', label: 'Số lượng' },
+                { key: 'price', label: 'Doanh thu (VNĐ)' }
+            ];
+            const csv = convertToCsv(salesData, headers);
             downloadFile(csv, 'doanh_thu.csv', 'text/csv');
         });
 
+        document.getElementById('export-product-items-csv-btn').addEventListener('click', () => {
+            const headers = [
+                { key: 'name', label: 'Tên Mặt hàng' },
+                { key: 'defaultUnit', label: 'Đơn vị mặc định' }
+            ];
+            const csv = convertToCsv(productItemsData, headers);
+            downloadFile(csv, 'danh_muc_mat_hang.csv', 'text/csv');
+        });
+
+
+        // Event Listeners for Navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = `section-${item.id.replace('nav-', '')}`;
+                showSection(sectionId);
+            });
+        });
 
         initializeApp();
     </script>
