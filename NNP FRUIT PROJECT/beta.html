@@ -56,7 +56,7 @@
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
     <!-- Chosen Palette: Calm Harmony -->
-    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (tổng quan, khách hàng, thực phẩm, tài chính, mặt hàng, quản lý dữ liệu) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác như thêm, chỉnh sửa, xóa, xuất/nhập, sắp xếp bảng và sử dụng datalist cho các trường nhập liệu. Bộ lọc ngày tháng trên Tổng quan và cảnh báo tồn kho thấp là các điểm nhấn chuyên nghiệp. CSV được xuất ra với tiêu đề tiếng Anh để tránh lỗi font và dễ dàng sử dụng hơn. Lời lỗ được tính toán dựa trên dữ liệu mua hàng và bán hàng. -->
+    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (tổng quan, khách hàng, thực phẩm, tài chính, mặt hàng, quản lý dữ liệu) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác như thêm, chỉnh sửa, xóa, xuất/nhập, sắp xếp bảng và sử dụng datalist cho các trường nhập liệu. Bộ lọc ngày tháng trên Tổng quan và cảnh báo tồn kho thấp là các điểm nhấn chuyên nghiệp. CSV được xuất ra với tiêu đề tiếng Anh để tránh lỗi font và dễ dàng sử dụng hơn. Lời lỗ được tính toán dựa trên dữ liệu mua hàng và bán hàng, với việc cập nhật tồn kho tự động. -->
     <!-- Visualization & Content Choices:
     - Tổng quan:
         - Mục tiêu: Hiển thị tổng quan nhanh về hiệu suất theo ngày hoặc theo khoảng thời gian tùy chọn.
@@ -73,13 +73,13 @@
     - Thực phẩm & Kho:
         - Mục tiêu: Theo dõi tồn kho thực phẩm, quản lý chi phí mua hàng và biến phí.
         - Viz/Presentation: Ba bảng riêng biệt: "Tồn kho thực phẩm", "Lịch sử Mua hàng" và "Biến phí khác". Các trường nhập liệu sử dụng datalist cho tên thực phẩm. Ngưỡng tồn kho thấp có thể cấu hình.
-        - Tương tác: Thêm/cập nhật/xóa các mục, xem lịch sử mua hàng, xuất CSV (tiếng Anh), chỉnh sửa, sắp xếp cột, cảnh báo tồn kho thấp trực quan.
-        - Lý do: Giúp người dùng dễ dàng theo dõi chi tiết về vật tư và chi phí vận hành, với cảnh báo sớm cho các mặt hàng sắp hết. Tính năng mua hàng riêng biệt hỗ trợ tính toán lời lỗ chính xác hơn.
+        - Tương tác: Thêm/cập nhật/xóa các mục, xem lịch sử mua hàng, xuất CSV (tiếng Anh), chỉnh sửa, sắp xếp cột, cảnh báo tồn kho thấp trực quan. Tự động cập nhật tồn kho khi mua hàng.
+        - Lý do: Giúp người dùng dễ dàng theo dõi chi tiết về vật tư và chi phí vận hành, với cảnh báo sớm cho các mặt hàng sắp hết. Tính năng mua hàng riêng biệt hỗ trợ tính toán lời lỗ chính xác hơn và quản lý kho tự động.
         - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
     - Tài chính:
         - Mục tiêu: Cung cấp cái nhìn chi tiết về doanh thu, chi phí và lợi nhuận.
         - Viz/Presentation: Bảng "Doanh thu chi tiết" và biểu đồ đường (Chart.js) để minh họa xu hướng doanh thu và lợi nhuận hàng tháng. Datalist cho tên sản phẩm/dịch vụ.
-        - Tương tác: Thêm/chỉnh sửa/xóa giao dịch, xem dữ liệu tổng hợp, xuất CSV (tiếng Anh), sắp xếp cột.
+        - Tương tác: Thêm/chỉnh sửa/xóa giao dịch, xem dữ liệu tổng hợp, xuất CSV (tiếng Anh), sắp xếp cột. Tự động cập nhật tồn kho khi bán hàng.
         - Lý do: Kết hợp dữ liệu chi tiết với biểu đồ xu hướng giúp người dùng phân tích hiệu quả tài chính.
         - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind), Vanilla JS.
     - Quản lý Mặt hàng:
@@ -454,22 +454,22 @@
         const lowStockThresholdInput = document.getElementById('low-stock-threshold');
 
         let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
-        let otherExpensesData = JSON.parse(localStorage.getItem('otherExpensesData')) || []; // Renamed from expensesData
+        let otherExpensesData = JSON.parse(localStorage.getItem('otherExpensesData')) || [];
         let customersData = JSON.parse(localStorage.getItem('customersData')) || [];
         let foodInventoryData = JSON.parse(localStorage.getItem('foodInventoryData')) || [];
         let productItemsData = JSON.parse(localStorage.getItem('productItemsData')) || [];
-        let purchaseHistoryData = JSON.parse(localStorage.getItem('purchaseHistoryData')) || []; // New: Purchase History
+        let purchaseHistoryData = JSON.parse(localStorage.getItem('purchaseHistoryData')) || [];
 
         let dailyIncomeChartInstance;
         let profitByFoodChartInstance;
         let monthlyFinancialChartInstance;
 
-        let editingCustomerIndex = -1;
-        let editingFoodInventoryIndex = -1;
-        let editingOtherExpenseIndex = -1; // Updated
-        let editingSaleIndex = -1;
-        let editingProductItemIndex = -1;
-        let editingPurchaseHistoryIndex = -1; // New
+        let editingCustomerUUID = null;
+        let editingFoodInventoryUUID = null;
+        let editingOtherExpenseUUID = null;
+        let editingSaleUUID = null;
+        let editingProductItemUUID = null;
+        let editingPurchaseHistoryUUID = null;
 
         function showSection(sectionId) {
             contentSections.forEach(section => {
@@ -506,7 +506,7 @@
         }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(amount); // Changed to en-US locale for consistency
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(amount);
         }
 
         function calculateSummaryForDateRange() {
@@ -515,7 +515,7 @@
 
             let filteredSales = salesData;
             let filteredOtherExpenses = otherExpensesData;
-            let filteredPurchases = purchaseHistoryData; // New
+            let filteredPurchases = purchaseHistoryData;
             let filteredCustomers = customersData;
 
             if (start && end) {
@@ -527,7 +527,7 @@
                     const expenseDate = new Date(expense.date);
                     return expenseDate >= start && expenseDate <= end;
                 });
-                filteredPurchases = purchaseHistoryData.filter(purchase => { // New
+                filteredPurchases = purchaseHistoryData.filter(purchase => {
                     const purchaseDate = new Date(purchase.date);
                     return purchaseDate >= start && purchaseDate <= end;
                 });
@@ -538,19 +538,20 @@
             } else if (start && !end) {
                  filteredSales = salesData.filter(sale => new Date(sale.date) >= start);
                  filteredOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) >= start);
-                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) >= start); // New
+                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) >= start);
                  filteredCustomers = customersData.filter(customer => new Date(customer.lastContact) >= start);
             } else if (!start && end) {
                  filteredSales = salesData.filter(sale => new Date(sale.date) <= end);
                  filteredOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) <= end);
-                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) <= end); // New
+                 filteredPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) <= end);
                  filteredCustomers = customersData.filter(customer => new Date(customer.lastContact) <= end);
             }
 
+
             const totalIncome = filteredSales.reduce((sum, sale) => sum + sale.price, 0);
             const totalOtherExpense = filteredOtherExpenses.reduce((sum, expense) => sum + expense.amount, 0);
-            const totalPurchaseCost = filteredPurchases.reduce((sum, purchase) => sum + purchase.totalCost, 0); // New
-            const estimatedProfit = totalIncome - totalOtherExpense - totalPurchaseCost; // Updated Profit Calc
+            const totalPurchaseCost = filteredPurchases.reduce((sum, purchase) => sum + purchase.totalCost, 0);
+            const estimatedProfit = totalIncome - totalOtherExpense - totalPurchaseCost;
 
             const uniqueCustomers = new Set(filteredCustomers.map(c => c.name)).size;
 
@@ -567,7 +568,7 @@
         function updateCustomerTable() {
             const tbody = document.getElementById('customer-table-body');
             tbody.innerHTML = '';
-            customersData.forEach((customer, index) => {
+            customersData.forEach((customer) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = customer.name;
@@ -576,8 +577,8 @@
                 row.insertCell().textContent = customer.status;
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
-                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
-                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${customer.uuid}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-uuid="${customer.uuid}">Xóa</button>
                 `;
             });
             localStorage.setItem('customersData', JSON.stringify(customersData));
@@ -590,8 +591,8 @@
             tbody.innerHTML = '';
             const lowStockThreshold = parseFloat(lowStockThresholdInput.value) || 0;
 
-            foodInventoryData.forEach((item, index) => {
-                const row = tbody.insertRow();
+            foodInventoryData.forEach((item) => {
+                const row = tbody.insertCell();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 if (item.quantity <= lowStockThreshold) {
                     row.classList.add('low-stock-alert');
@@ -601,18 +602,18 @@
                 row.insertCell().textContent = item.unit;
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
-                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
-                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${item.uuid}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-uuid="${item.uuid}">Xóa</button>
                 `;
             });
             localStorage.setItem('foodInventoryData', JSON.stringify(foodInventoryData));
             attachTableEventListeners(tbody, 'foodInventory');
         }
 
-        function updatePurchaseHistoryTable() { // New function
+        function updatePurchaseHistoryTable() {
             const tbody = document.getElementById('purchase-history-table-body');
             tbody.innerHTML = '';
-            purchaseHistoryData.forEach((purchase, index) => {
+            purchaseHistoryData.forEach((purchase) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = purchase.itemName;
@@ -622,18 +623,18 @@
                 row.insertCell().textContent = formatDate(purchase.date);
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
-                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
-                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${purchase.uuid}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-uuid="${purchase.uuid}">Xóa</button>
                 `;
             });
             localStorage.setItem('purchaseHistoryData', JSON.stringify(purchaseHistoryData));
             attachTableEventListeners(tbody, 'purchaseHistory');
         }
 
-        function updateOtherExpenseTable() { // Renamed from updateExpenseTable
+        function updateOtherExpenseTable() {
             const tbody = document.getElementById('other-expense-table-body');
             tbody.innerHTML = '';
-            otherExpensesData.forEach((expense, index) => {
+            otherExpensesData.forEach((expense) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = expense.description;
@@ -641,8 +642,8 @@
                 row.insertCell().textContent = formatDate(expense.date);
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
-                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
-                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${expense.uuid}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-uuid="${expense.uuid}">Xóa</button>
                 `;
             });
             localStorage.setItem('otherExpensesData', JSON.stringify(otherExpensesData));
@@ -652,7 +653,7 @@
         function updateSalesTable() {
             const tbody = document.getElementById('sales-table-body');
             tbody.innerHTML = '';
-            salesData.forEach((sale, index) => {
+            salesData.forEach((sale) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = formatDate(sale.date);
@@ -661,8 +662,8 @@
                 row.insertCell().textContent = formatCurrency(sale.price);
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
-                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
-                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${sale.uuid}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-uuid="${sale.uuid}">Xóa</button>
                 `;
             });
             localStorage.setItem('salesData', JSON.stringify(salesData));
@@ -672,15 +673,15 @@
         function updateProductItemsTable() {
             const tbody = document.getElementById('product-items-table-body');
             tbody.innerHTML = '';
-            productItemsData.forEach((item, index) => {
+            productItemsData.forEach((item) => {
                 const row = tbody.insertRow();
                 row.className = 'border-b border-gray-100 last:border-b-0';
                 row.insertCell().textContent = item.name;
                 row.insertCell().textContent = item.defaultUnit;
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
-                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-index="${index}">Sửa</button>
-                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-index="${index}">Xóa</button>
+                    <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${item.uuid}">Sửa</button>
+                    <button class="delete-btn bg-red-500 text-white px-2 py-1 rounded-md text-sm hover:bg-red-600" data-uuid="${item.uuid}">Xóa</button>
                 `;
             });
             localStorage.setItem('productItemsData', JSON.stringify(productItemsData));
@@ -701,8 +702,8 @@
         function updateAllTables() {
             updateCustomerTable();
             updateFoodInventoryTable();
-            updatePurchaseHistoryTable(); // New
-            updateOtherExpenseTable(); // Updated
+            updatePurchaseHistoryTable();
+            updateOtherExpenseTable();
             updateSalesTable();
             updateProductItemsTable();
         }
@@ -755,7 +756,7 @@
                 data: {
                     labels: last7Days.map(d => formatDate(d)),
                     datasets: [{
-                        label: 'Revenue (VND)', // English label
+                        label: 'Revenue (VND)',
                         data: incomeByDay,
                         borderColor: '#4CAF50',
                         backgroundColor: 'rgba(76, 175, 80, 0.2)',
@@ -780,7 +781,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Amount (VND)' // English label
+                                text: 'Amount (VND)'
                             },
                             ticks: {
                                 callback: function(value) {
@@ -791,7 +792,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Date' // English label
+                                text: 'Date'
                             }
                         }
                     }
@@ -807,13 +808,12 @@
                 foodSales[sale.itemName] = (foodSales[sale.itemName] || 0) + sale.price;
             });
 
-            const foodPurchaseCosts = {}; // New
-            purchaseHistoryData.forEach(purchase => { // New
+            const foodPurchaseCosts = {};
+            purchaseHistoryData.forEach(purchase => {
                 foodPurchaseCosts[purchase.itemName] = (foodPurchaseCosts[purchase.itemName] || 0) + purchase.totalCost;
             });
 
             const foodProfit = {};
-            // Iterate over all unique food items from sales and purchases
             const allFoodItems = new Set([...Object.keys(foodSales), ...Object.keys(foodPurchaseCosts)]);
             allFoodItems.forEach(item => {
                 const salesRevenue = foodSales[item] || 0;
@@ -830,7 +830,7 @@
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Profit (VND)', // English label
+                        label: 'Profit (VND)',
                         data: data,
                         backgroundColor: '#FFC107',
                         borderColor: '#FFB300',
@@ -854,7 +854,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Profit (VND)' // English label
+                                text: 'Profit (VND)'
                             },
                             ticks: {
                                 callback: function(value) {
@@ -865,7 +865,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Food Item' // English label
+                                text: 'Food Item'
                             },
                             ticks: {
                                 callback: wrapLabels
@@ -887,13 +887,13 @@
                 monthlyData[month].income += sale.price;
             });
 
-            otherExpensesData.forEach(expense => { // Updated
+            otherExpensesData.forEach(expense => {
                 const month = expense.date.slice(0, 7);
                 if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].expenses += expense.amount;
             });
 
-            purchaseHistoryData.forEach(purchase => { // New
+            purchaseHistoryData.forEach(purchase => {
                 const month = purchase.date.slice(0, 7);
                 if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].purchaseCosts += purchase.totalCost;
@@ -902,8 +902,9 @@
 
             const sortedMonths = Object.keys(monthlyData).sort();
             const monthlyIncomes = sortedMonths.map(month => monthlyData[month].income);
-            const monthlyTotalCosts = sortedMonths.map(month => monthlyData[month].expenses + monthlyData[month].purchaseCosts); // Updated
-            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyTotalCosts[sortedMonths.indexOf(month)]); // Updated
+            const monthlyTotalCosts = sortedMonths.map(month => monthlyData[month].expenses + monthlyData[month].purchaseCosts);
+            // FIX: Corrected calculation for monthlyProfits to use monthlyTotalCosts
+            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyTotalCosts[sortedMonths.indexOf(month)]);
 
             monthlyFinancialChartInstance = new Chart(ctx, {
                 type: 'line',
@@ -911,7 +912,7 @@
                     labels: sortedMonths,
                     datasets: [
                         {
-                            label: 'Monthly Revenue (VND)', // English label
+                            label: 'Monthly Revenue (VND)',
                             data: monthlyIncomes,
                             borderColor: '#42A5F5',
                             backgroundColor: 'rgba(66, 165, 245, 0.2)',
@@ -919,15 +920,15 @@
                             tension: 0.3
                         },
                         {
-                            label: 'Monthly Expenses (VND)', // English label
-                            data: monthlyTotalCosts, // Updated
+                            label: 'Monthly Expenses (VND)',
+                            data: monthlyTotalCosts,
                             borderColor: '#EF5350',
                             backgroundColor: 'rgba(239, 83, 80, 0.2)',
                             fill: true,
                             tension: 0.3
                         },
                         {
-                            label: 'Monthly Profit (VND)', // English label
+                            label: 'Monthly Profit (VND)',
                             data: monthlyProfits,
                             borderColor: '#66BB6A',
                             backgroundColor: 'rgba(102, 187, 106, 0.2)',
@@ -953,7 +954,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Amount (VND)' // English label
+                                text: 'Amount (VND)'
                             },
                             ticks: {
                                 callback: function(value) {
@@ -964,7 +965,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Month' // English label
+                                text: 'Month'
                             }
                         }
                     }
@@ -988,7 +989,7 @@
         // Helper function to convert array of objects to CSV string
         function convertToCsv(arr, headers = null) {
             if (!arr.length) return '';
-            const finalHeaders = headers || Object.keys(arr[0]); // Use provided headers or infer
+            const finalHeaders = headers || Object.keys(arr[0]);
             const headerRow = finalHeaders.map(h => {
                 if (typeof h === 'object' && h.label) return `"${h.label.replace(/"/g, '""')}"`;
                 return `"${String(h).replace(/"/g, '""')}"`;
@@ -998,24 +999,21 @@
                 const actualKey = (typeof key === 'object' && key.key) ? key.key : key;
                 let value = row[actualKey];
 
-                // Special formatting for dates
                 if (['date', 'lastContact', 'nextFollowup'].includes(actualKey)) {
                     value = formatDate(value);
                 }
-                // Special formatting for expense type
                 else if (actualKey === 'type') {
-                    value = value === 'mua_thuc_pham' ? 'Food Purchase' : 'Other Variable Expense'; // English value
+                    value = value === 'mua_thuc_pham' ? 'Food Purchase' : 'Other Variable Expense';
                 }
-                // Special formatting for currency or numbers (keep as raw number for CSV, let Excel format)
                 else if (['amount', 'price', 'quantity', 'purchasePrice', 'totalCost'].includes(actualKey)) {
-                    value = parseFloat(value); // Ensure it's a number
+                    value = value;
                 }
 
                 if (typeof value === 'string' && value.includes(',')) {
                     return `"${value.replace(/"/g, '""')}"`;
                 }
-                return String(value); // Convert all values to string for CSV
-            }).join(','));
+                return String(value);
+            }).join(',');
             return [headerRow, ...rows].join('\n');
         }
 
@@ -1034,15 +1032,15 @@
         function attachTableEventListeners(tbody, dataType) {
             tbody.querySelectorAll('.edit-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
-                    const index = parseInt(event.target.dataset.index);
-                    editItem(dataType, index);
+                    const uuid = event.target.dataset.uuid;
+                    editItem(dataType, uuid);
                 });
             });
 
             tbody.querySelectorAll('.delete-btn').forEach(button => {
                 button.addEventListener('click', (event) => {
-                    const index = parseInt(event.target.dataset.index);
-                    deleteItem(dataType, index);
+                    const uuid = event.target.dataset.uuid;
+                    deleteItem(dataType, uuid);
                 });
             });
 
@@ -1073,7 +1071,7 @@
                     dataArray = foodInventoryData;
                     updateTableFunc = updateFoodInventoryTable;
                     break;
-                case 'otherExpense': // Updated
+                case 'otherExpense':
                     dataArray = otherExpensesData;
                     updateTableFunc = updateOtherExpenseTable;
                     break;
@@ -1085,7 +1083,7 @@
                     dataArray = productItemsData;
                     updateTableFunc = updateProductItemsTable;
                     break;
-                case 'purchaseHistory': // New
+                case 'purchaseHistory':
                     dataArray = purchaseHistoryData;
                     updateTableFunc = updatePurchaseHistoryTable;
                     break;
@@ -1116,11 +1114,20 @@
             updateTableFunc();
         }
 
+        function findItemByUUID(dataArray, uuid) {
+            return dataArray.find(item => item.uuid === uuid);
+        }
 
-        function editItem(dataType, index) {
+        function findIndexByUUID(dataArray, uuid) {
+            return dataArray.findIndex(item => item.uuid === uuid);
+        }
+
+
+        function editItem(dataType, uuid) {
             let dataArray;
             let formElements;
             let addBtn;
+            let editingUUIDField;
 
             switch (dataType) {
                 case 'customer':
@@ -1132,7 +1139,7 @@
                         status: document.getElementById('customer-status')
                     };
                     addBtn = document.getElementById('add-customer-btn');
-                    editingCustomerIndex = index;
+                    editingUUIDField = 'editingCustomerUUID';
                     break;
                 case 'foodInventory':
                     dataArray = foodInventoryData;
@@ -1142,9 +1149,9 @@
                         unit: document.getElementById('food-item-unit')
                     };
                     addBtn = document.getElementById('add-food-item-btn');
-                    editingFoodInventoryIndex = index;
+                    editingUUIDField = 'editingFoodInventoryUUID';
                     break;
-                case 'otherExpense': // Updated
+                case 'otherExpense':
                     dataArray = otherExpensesData;
                     formElements = {
                         description: document.getElementById('other-expense-description'),
@@ -1152,9 +1159,9 @@
                         date: document.getElementById('other-expense-date')
                     };
                     addBtn = document.getElementById('add-other-expense-btn');
-                    editingOtherExpenseIndex = index;
+                    editingUUIDField = 'editingOtherExpenseUUID';
                     break;
-                case 'purchaseHistory': // New
+                case 'purchaseHistory':
                     dataArray = purchaseHistoryData;
                     formElements = {
                         itemName: document.getElementById('purchase-item-name'),
@@ -1164,7 +1171,7 @@
                         date: document.getElementById('purchase-date')
                     };
                     addBtn = document.getElementById('add-purchase-btn');
-                    editingPurchaseHistoryIndex = index;
+                    editingUUIDField = 'editingPurchaseHistoryUUID';
                     break;
                 case 'sale':
                     dataArray = salesData;
@@ -1175,7 +1182,7 @@
                         date: document.getElementById('sale-date')
                     };
                     addBtn = document.getElementById('add-sale-btn');
-                    editingSaleIndex = index;
+                    editingUUIDField = 'editingSaleUUID';
                     break;
                 case 'productItem':
                     dataArray = productItemsData;
@@ -1184,25 +1191,26 @@
                         defaultUnit: document.getElementById('product-item-default-unit')
                     };
                     addBtn = document.getElementById('add-product-item-btn');
-                    editingProductItemIndex = index;
+                    editingUUIDField = 'editingProductItemUUID';
                     break;
                 default:
                     return;
             }
 
-            const item = dataArray[index];
+            const item = findItemByUUID(dataArray, uuid);
             if (item) {
                 for (const key in formElements) {
                     if (formElements[key]) {
                         formElements[key].value = item[key];
                     }
                 }
-                addBtn.textContent = 'Cập nhật';
+                addBtn.textContent = 'Update';
+                window[editingUUIDField] = uuid;
             }
         }
 
-        function deleteItem(dataType, index) {
-            if (!confirm('Bạn có chắc chắn muốn xóa mục này?')) return;
+        function deleteItem(dataType, uuid) {
+            if (!confirm('Are you sure you want to delete this item?')) return;
 
             let dataArray;
             let updateTableFunc;
@@ -1219,23 +1227,41 @@
                     dataArray = foodInventoryData;
                     updateTableFunc = updateFoodInventoryTable;
                     break;
-                case 'otherExpense': // Updated
+                case 'otherExpense':
                     dataArray = otherExpensesData;
                     updateTableFunc = updateOtherExpenseTable;
                     calculateSummaryNeeded = true;
                     updateChartsNeeded = true;
                     break;
-                case 'purchaseHistory': // New
+                case 'purchaseHistory':
                     dataArray = purchaseHistoryData;
                     updateTableFunc = updatePurchaseHistoryTable;
-                    calculateSummaryNeeded = true; // Affects profit
-                    updateChartsNeeded = true; // Affects profit charts
+                    calculateSummaryNeeded = true;
+                    updateChartsNeeded = true;
+                    // When a purchase is deleted, decrease inventory
+                    const deletedPurchase = findItemByUUID(purchaseHistoryData, uuid);
+                    if (deletedPurchase) {
+                        const inventoryItem = findItemByName(foodInventoryData, deletedPurchase.itemName);
+                        if (inventoryItem) {
+                            inventoryItem.quantity = (inventoryItem.quantity || 0) - deletedPurchase.quantity;
+                        }
+                    }
+                    updateFoodInventoryTable();
                     break;
                 case 'sale':
                     dataArray = salesData;
                     updateTableFunc = updateSalesTable;
                     calculateSummaryNeeded = true;
                     updateChartsNeeded = true;
+                    // When a sale is deleted, return quantity to inventory
+                    const deletedSale = findItemByUUID(salesData, uuid);
+                    if (deletedSale) {
+                        const inventoryItem = findItemByName(foodInventoryData, deletedSale.itemName);
+                        if (inventoryItem) {
+                            inventoryItem.quantity = (inventoryItem.quantity || 0) + deletedSale.quantity;
+                        }
+                    }
+                    updateFoodInventoryTable();
                     break;
                 case 'productItem':
                     dataArray = productItemsData;
@@ -1245,16 +1271,22 @@
                     return;
             }
 
-            if (dataArray && index >= 0 && index < dataArray.length) {
-                dataArray.splice(index, 1);
+            const itemIndex = findIndexByUUID(dataArray, uuid);
+            if (itemIndex > -1) {
+                dataArray.splice(itemIndex, 1);
                 updateTableFunc();
                 calculateSummaryForDateRange();
                 if (calculateSummaryNeeded) updateSummaryKPIs();
                 if (updateChartsNeeded) updateCharts();
                 updateProductDatalist();
-                alert('Mục đã được xóa thành công!');
+                alert('Item deleted successfully!');
             }
         }
+
+        function findItemByName(array, name) {
+            return array.find(item => item.name.toLowerCase() === name.toLowerCase());
+        }
+
 
         document.getElementById('add-customer-btn').addEventListener('click', () => {
             const name = document.getElementById('customer-name').value.trim();
@@ -1263,14 +1295,19 @@
             const status = document.getElementById('customer-status').value;
 
             if (name && lastContact && nextFollowup) {
-                const customer = { name, lastContact, nextFollowup, status };
-                if (editingCustomerIndex > -1) {
-                    customersData[editingCustomerIndex] = customer;
-                    editingCustomerIndex = -1;
+                if (editingCustomerUUID) {
+                    const customer = findItemByUUID(customersData, editingCustomerUUID);
+                    if (customer) {
+                        customer.name = name;
+                        customer.lastContact = lastContact;
+                        customer.nextFollowup = nextFollowup;
+                        customer.status = status;
+                        alert('Customer info updated successfully!');
+                    }
+                    editingCustomerUUID = null;
                     document.getElementById('add-customer-btn').textContent = 'Thêm khách hàng';
-                    alert('Customer info updated successfully!');
                 } else {
-                    customersData.push(customer);
+                    customersData.push({ uuid: crypto.randomUUID(), name, lastContact, nextFollowup, status });
                     alert('Customer added successfully!');
                 }
                 updateCustomerTable();
@@ -1289,19 +1326,23 @@
             const unit = document.getElementById('food-item-unit').value.trim();
 
             if (name && !isNaN(quantity) && unit) {
-                const foodItem = { name, quantity, unit };
-                if (editingFoodInventoryIndex > -1) {
-                    foodInventoryData[editingFoodInventoryIndex] = foodItem;
-                    editingFoodInventoryIndex = -1;
+                if (editingFoodInventoryUUID) {
+                    const foodItem = findItemByUUID(foodInventoryData, editingFoodInventoryUUID);
+                    if (foodItem) {
+                        foodItem.name = name;
+                        foodItem.quantity = quantity;
+                        foodItem.unit = unit;
+                        alert('Food inventory updated successfully!');
+                    }
+                    editingFoodInventoryUUID = null;
                     document.getElementById('add-food-item-btn').textContent = 'Thêm/Cập nhật tồn kho';
-                    alert('Food inventory updated successfully!');
                 } else {
                     if (!productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
-                        productItemsData.push({ name: name, defaultUnit: unit });
+                        productItemsData.push({ uuid: crypto.randomUUID(), name: name, defaultUnit: unit });
                         updateProductItemsTable();
                         updateProductDatalist();
                     }
-                    foodInventoryData.push(foodItem);
+                    foodInventoryData.push({ uuid: crypto.randomUUID(), name, quantity, unit });
                     alert('Food inventory added successfully!');
                 }
                 updateFoodInventoryTable();
@@ -1314,7 +1355,7 @@
             }
         });
 
-        document.getElementById('add-purchase-btn').addEventListener('click', () => { // New event listener
+        document.getElementById('add-purchase-btn').addEventListener('click', () => {
             const itemName = document.getElementById('purchase-item-name').value.trim();
             const quantity = parseFloat(document.getElementById('purchase-quantity').value);
             const unit = document.getElementById('purchase-unit').value.trim();
@@ -1323,30 +1364,35 @@
 
             if (itemName && !isNaN(quantity) && unit && !isNaN(purchasePrice) && date) {
                 const totalCost = quantity * purchasePrice;
-                const purchase = { itemName, quantity, unit, purchasePrice, date, totalCost };
+                const purchase = { uuid: crypto.randomUUID(), itemName, quantity, unit, purchasePrice, date, totalCost };
 
-                if (editingPurchaseHistoryIndex > -1) {
-                    purchaseHistoryData[editingPurchaseHistoryIndex] = purchase;
-                    editingPurchaseHistoryIndex = -1;
+                if (editingPurchaseHistoryUUID) {
+                    const existingPurchase = findItemByUUID(purchaseHistoryData, editingPurchaseHistoryUUID);
+                    if (existingPurchase) {
+                        // Revert old inventory change
+                        const oldFoodItem = findItemByName(foodInventoryData, existingPurchase.itemName);
+                        if (oldFoodItem) oldFoodItem.quantity -= existingPurchase.quantity;
+
+                        // Apply new data
+                        Object.assign(existingPurchase, purchase);
+                        alert('Purchase transaction updated successfully!');
+                    }
+                    editingPurchaseHistoryUUID = null;
                     document.getElementById('add-purchase-btn').textContent = 'Thêm Giao dịch Mua';
-                    alert('Purchase transaction updated successfully!');
                 } else {
-                    if (!productItemsData.some(item => item.name.toLowerCase() === itemName.toLowerCase())) {
-                        productItemsData.push({ name: itemName, defaultUnit: unit });
-                        updateProductItemsTable();
-                        updateProductDatalist();
-                    }
                     purchaseHistoryData.push(purchase);
-                    // Also update food inventory (simple add for now)
-                    const existingFoodItemIndex = foodInventoryData.findIndex(item => item.name.toLowerCase() === itemName.toLowerCase());
-                    if (existingFoodItemIndex > -1) {
-                        foodInventoryData[existingFoodItemIndex].quantity += quantity;
-                    } else {
-                        foodInventoryData.push({ name: itemName, quantity: quantity, unit: unit });
-                    }
-                    updateFoodInventoryTable();
                     alert('Purchase transaction added successfully!');
                 }
+
+                // Update food inventory: Find by name, then update quantity
+                let foodItem = foodInventoryData.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+                if (foodItem) {
+                    foodItem.quantity += quantity;
+                } else {
+                    // If item doesn't exist in inventory, add it
+                    foodInventoryData.push({ uuid: crypto.randomUUID(), name: itemName, quantity: quantity, unit: unit });
+                }
+                updateFoodInventoryTable();
                 updatePurchaseHistoryTable();
                 calculateSummaryForDateRange();
                 updateCharts();
@@ -1361,20 +1407,24 @@
         });
 
 
-        document.getElementById('add-other-expense-btn').addEventListener('click', () => { // Updated
+        document.getElementById('add-other-expense-btn').addEventListener('click', () => {
             const description = document.getElementById('other-expense-description').value.trim();
             const amount = parseFloat(document.getElementById('other-expense-amount').value);
             const date = document.getElementById('other-expense-date').value;
 
             if (description && !isNaN(amount) && date) {
-                const expense = { description, amount, date };
-                if (editingOtherExpenseIndex > -1) {
-                    otherExpensesData[editingOtherExpenseIndex] = expense;
-                    editingOtherExpenseIndex = -1;
+                if (editingOtherExpenseUUID) {
+                    const expense = findItemByUUID(otherExpensesData, editingOtherExpenseUUID);
+                    if (expense) {
+                        expense.description = description;
+                        expense.amount = amount;
+                        expense.date = date;
+                        alert('Other expense updated successfully!');
+                    }
+                    editingOtherExpenseUUID = null;
                     document.getElementById('add-other-expense-btn').textContent = 'Thêm Biến phí';
-                    alert('Other expense updated successfully!');
                 } else {
-                    otherExpensesData.push(expense);
+                    otherExpensesData.push({ uuid: crypto.randomUUID(), description, amount, date });
                     alert('Other expense added successfully!');
                 }
                 updateOtherExpenseTable();
@@ -1395,21 +1445,52 @@
             const date = document.getElementById('sale-date').value;
 
             if (itemName && !isNaN(quantity) && !isNaN(price) && date) {
-                const sale = { itemName, quantity, price, date };
-                if (editingSaleIndex > -1) {
-                    salesData[editingSaleIndex] = sale;
-                    editingSaleIndex = -1;
-                    document.getElementById('add-sale-btn').textContent = 'Thêm giao dịch';
-                    alert('Sales transaction updated successfully!');
-                } else {
-                    if (!productItemsData.some(item => item.name.toLowerCase() === itemName.toLowerCase())) {
-                        productItemsData.push({ name: itemName, defaultUnit: '' });
-                        updateProductItemsTable();
-                        updateProductDatalist();
+                // Check inventory before sale
+                let foodItemInInventory = foodInventoryData.find(item => item.name.toLowerCase() === itemName.toLowerCase());
+
+                if (!foodItemInInventory) {
+                    alert('Item not found in inventory. Please add it to "Food & Inventory" first.');
+                    return;
+                }
+                // When editing, if the old quantity + current inventory is less than the new quantity, then it's an insufficient stock.
+                // If it's a new sale, or if the item wasn't sold before (editing existingSale is null), then just check `foodItemInInventory.quantity < quantity`.
+                // If editing existing sale, consider `foodItemInInventory.quantity + existingSale.quantity < quantity`
+                let availableQuantity = foodItemInInventory.quantity;
+                if (editingSaleUUID) {
+                    const existingSale = findItemByUUID(salesData, editingSaleUUID);
+                    if (existingSale && existingSale.itemName.toLowerCase() === itemName.toLowerCase()) {
+                        availableQuantity += existingSale.quantity; // Add back the quantity of the original sale
                     }
-                    salesData.push(sale);
+                }
+
+                if (availableQuantity < quantity) {
+                    alert(`Insufficient stock for ${itemName}. Available: ${foodItemInInventory.quantity} ${foodItemInInventory.unit}.`);
+                    return;
+                }
+
+
+                if (editingSaleUUID) {
+                    const existingSale = findItemByUUID(salesData, editingSaleUUID);
+                    if (existingSale) {
+                        // Restore old quantity to inventory
+                        const oldFoodItem = foodInventoryData.find(item => item.name.toLowerCase() === existingSale.itemName.toLowerCase());
+                        if (oldFoodItem) {
+                            oldFoodItem.quantity += existingSale.quantity;
+                        }
+
+                        // Apply new data
+                        Object.assign(existingSale, { uuid: editingSaleUUID, itemName, quantity, price, date });
+                        foodItemInInventory.quantity -= quantity; // Deduct new quantity
+                        alert('Sales transaction updated successfully!');
+                    }
+                    editingSaleUUID = null;
+                    document.getElementById('add-sale-btn').textContent = 'Thêm giao dịch';
+                } else {
+                    salesData.push({ uuid: crypto.randomUUID(), itemName, quantity, price, date });
+                    foodItemInInventory.quantity -= quantity; // Deduct from inventory
                     alert('Sales transaction added successfully!');
                 }
+                updateFoodInventoryTable(); // Update inventory table after sale/edit
                 updateSalesTable();
                 calculateSummaryForDateRange();
                 updateCharts();
@@ -1427,18 +1508,21 @@
             const defaultUnit = document.getElementById('product-item-default-unit').value.trim();
 
             if (name) {
-                const productItem = { name, defaultUnit };
-                if (editingProductItemIndex > -1) {
-                    productItemsData[editingProductItemIndex] = productItem;
-                    editingProductItemIndex = -1;
+                if (editingProductItemUUID) {
+                    const productItem = findItemByUUID(productItemsData, editingProductItemUUID);
+                    if (productItem) {
+                        productItem.name = name;
+                        productItem.defaultUnit = defaultUnit;
+                        alert('Product item updated successfully!');
+                    }
+                    editingProductItemUUID = null;
                     document.getElementById('add-product-item-btn').textContent = 'Thêm Mặt hàng';
-                    alert('Product item updated successfully!');
                 } else {
                     if (productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
                         alert('This product item already exists!');
                         return;
                     }
-                    productItemsData.push(productItem);
+                    productItemsData.push({ uuid: crypto.randomUUID(), name, defaultUnit });
                     alert('Product item added successfully!');
                 }
                 updateProductItemsTable();
@@ -1454,11 +1538,11 @@
         document.getElementById('export-all-data-json-btn').addEventListener('click', () => {
             const allData = {
                 salesData: salesData,
-                otherExpensesData: otherExpensesData, // Updated
+                otherExpensesData: otherExpensesData,
                 customersData: customersData,
                 foodInventoryData: foodInventoryData,
                 productItemsData: productItemsData,
-                purchaseHistoryData: purchaseHistoryData // New
+                purchaseHistoryData: purchaseHistoryData
             };
             const jsonString = JSON.stringify(allData, null, 2);
             downloadFile(jsonString, 'business_data.json', 'application/json');
@@ -1477,18 +1561,18 @@
                 try {
                     const importedData = JSON.parse(e.target.result);
                     if (importedData.salesData) salesData = importedData.salesData;
-                    if (importedData.otherExpensesData) otherExpensesData = importedData.otherExpensesData; // Updated
+                    if (importedData.otherExpensesData) otherExpensesData = importedData.otherExpensesData;
                     if (importedData.customersData) customersData = importedData.customersData;
                     if (importedData.foodInventoryData) foodInventoryData = importedData.foodInventoryData;
                     if (importedData.productItemsData) productItemsData = importedData.productItemsData;
-                    if (importedData.purchaseHistoryData) purchaseHistoryData = importedData.purchaseHistoryData; // New
+                    if (importedData.purchaseHistoryData) purchaseHistoryData = importedData.purchaseHistoryData;
 
                     localStorage.setItem('salesData', JSON.stringify(salesData));
-                    localStorage.setItem('otherExpensesData', JSON.stringify(otherExpensesData)); // Updated
+                    localStorage.setItem('otherExpensesData', JSON.stringify(otherExpensesData));
                     localStorage.setItem('customersData', JSON.stringify(customersData));
                     localStorage.setItem('foodInventoryData', JSON.stringify(foodInventoryData));
                     localStorage.setItem('productItemsData', JSON.stringify(productItemsData));
-                    localStorage.setItem('purchaseHistoryData', JSON.stringify(purchaseHistoryData)); // New
+                    localStorage.setItem('purchaseHistoryData', JSON.stringify(purchaseHistoryData));
 
                     initializeApp();
                     alert('Data imported successfully!');
@@ -1501,7 +1585,7 @@
             event.target.value = '';
         });
 
-        document.getElementById('export-summary-csv-btn').addEventListener('click', () => { // New export button for summary
+        document.getElementById('export-summary-csv-btn').addEventListener('click', () => {
             const start = startDateFilter.value ? new Date(startDateFilter.value) : null;
             const end = endDateFilter.value ? new Date(endDateFilter.value) : null;
 
@@ -1606,7 +1690,7 @@
             downloadFile(csv, 'food_inventory.csv', 'text/csv;charset=utf-8;');
         });
 
-        document.getElementById('export-purchase-history-csv-btn').addEventListener('click', () => { // New CSV export
+        document.getElementById('export-purchase-history-csv-btn').addEventListener('click', () => {
             const headers = [
                 { key: 'itemName', label: 'Item Name' },
                 { key: 'quantity', label: 'Quantity' },
@@ -1619,7 +1703,7 @@
             downloadFile(csv, 'purchase_history.csv', 'text/csv;charset=utf-8;');
         });
 
-        document.getElementById('export-other-expenses-csv-btn').addEventListener('click', () => { // Updated
+        document.getElementById('export-other-expenses-csv-btn').addEventListener('click', () => {
             const headers = [
                 { key: 'description', label: 'Description' },
                 { key: 'amount', label: 'Amount (VND)' },
