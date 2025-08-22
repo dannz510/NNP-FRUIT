@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng Dụng Theo Dõi Dữ Liệu Kinh Doanh</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8F7F4;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-item.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #e0e0e0;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
+    <!-- Chosen Palette: Calm Harmony -->
+    <!-- Application Structure Plan: Ứng dụng được thiết kế theo cấu trúc bảng điều khiển (dashboard) với thanh điều hướng bên trái và khu vực nội dung chính bên phải. Cấu trúc này được chọn để nhóm các loại dữ liệu khác nhau (khách hàng, thực phẩm, tài chính) một cách logic, giúp người dùng dễ dàng chuyển đổi giữa các phần và tập trung vào từng loại thông tin cụ thể. Mỗi phần có các chỉ số, biểu đồ và bảng dữ liệu riêng, cùng với các tương tác đơn giản như thêm dữ liệu hoặc lọc. -->
+    <!-- Visualization & Content Choices:
+    - Tổng quan:
+        - Mục tiêu: Hiển thị tổng quan nhanh về hiệu suất hàng ngày.
+        - Viz/Presentation: Các chỉ số KPI lớn (thu nhập, khách hàng, lợi nhuận). Biểu đồ đường (Chart.js) cho xu hướng thu nhập 7 ngày. Biểu đồ cột (Chart.js) cho lợi nhuận theo loại thực phẩm (top 5).
+        - Tương tác: Chỉ hiển thị, cung cấp cái nhìn tổng thể.
+        - Lý do: Cho phép người dùng nhanh chóng nắm bắt tình hình kinh doanh tổng thể mà không cần đi sâu vào chi tiết.
+        - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind).
+    - Khách hàng:
+        - Mục tiêu: Quản lý và theo dõi thông tin tương tác với khách hàng.
+        - Viz/Presentation: Bảng dữ liệu (HTML table) với các trường "Tên khách hàng", "Ngày tương tác cuối", "Ngày theo dõi tiếp theo", "Trạng thái". Form nhập liệu đơn giản.
+        - Tương tác: Thêm khách hàng mới, cập nhật trạng thái theo dõi.
+        - Lý do: Định dạng bảng là hiệu quả nhất để xem và quản lý dữ liệu bản ghi riêng lẻ.
+        - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
+    - Thực phẩm & Kho:
+        - Mục tiêu: Theo dõi tồn kho thực phẩm, quản lý chi phí mua hàng và biến phí.
+        - Viz/Presentation: Hai bảng riêng biệt: "Tồn kho thực phẩm" và "Nhập/Mua hàng & Biến phí". Các trường tương ứng với thông tin được yêu cầu.
+        - Tương tác: Thêm/sửa/xóa các mục, xem lịch sử mua hàng.
+        - Lý do: Giúp người dùng dễ dàng theo dõi chi tiết về vật tư và chi phí vận hành.
+        - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
+    - Tài chính:
+        - Mục tiêu: Cung cấp cái nhìn chi tiết về doanh thu, chi phí và lợi nhuận.
+        - Viz/Presentation: Bảng "Doanh thu chi tiết" và bảng "Tổng quan Lợi nhuận". Biểu đồ đường (Chart.js) để minh họa xu hướng doanh thu và lợi nhuận hàng tháng.
+        - Tương tác: Lọc theo ngày/tháng, xem dữ liệu tổng hợp.
+        - Lý do: Kết hợp dữ liệu chi tiết với biểu đồ xu hướng giúp người dùng phân tích hiệu quả tài chính.
+        - Thư viện/Phương pháp: Chart.js (Canvas), HTML/CSS (Tailwind), Vanilla JS.
+    - Giao diện người dùng (UI):
+        - Mục tiêu: Đảm bảo trải nghiệm người dùng trực quan, dễ sử dụng, và hiển thị đẹp mắt trên mọi thiết bị.
+        - Phương pháp trình bày: Bố cục đáp ứng (Tailwind CSS Flexbox/Grid), thanh điều hướng bên trái, khu vực nội dung chính. Các nút, dropdown cho tương tác.
+        - Tương tác: Chuyển đổi giữa các phần, nhập dữ liệu.
+        - Lý do: Cấu trúc SPA rõ ràng giúp người dùng tập trung vào từng phần dữ liệu mà không bị phân tâm.
+        - Thư viện/Phương pháp: HTML/CSS (Tailwind), Vanilla JS.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <!-- Thanh Điều Hướng Bên Trái -->
+    <nav class="w-full md:w-64 bg-white p-6 shadow-lg rounded-xl m-4 flex-shrink-0">
+        <div class="text-xl font-bold text-gray-800 mb-6">Quản lý Kinh doanh</div>
+        <ul class="space-y-2">
+            <li>
+                <button id="nav-tongquan" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700 active">
+                    Tổng quan
+                </button>
+            </li>
+            <li>
+                <button id="nav-khachhang" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                    Khách hàng
+                </button>
+            </li>
+            <li>
+                <button id="nav-thucphamkho" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                    Thực phẩm & Kho
+                </button>
+            </li>
+            <li>
+                <button id="nav-taichinh" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                    Tài chính
+                </button>
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Khu Vực Nội Dung Chính -->
+    <main class="flex-grow p-4 md:p-8">
+        <!-- Tổng quan Section -->
+        <section id="section-tongquan" class="content-section active bg-white p-6 shadow-lg rounded-xl mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Tổng quan hàng ngày</h2>
+            <p class="text-gray-600 mb-6">Phần này cung cấp một cái nhìn tổng thể về hiệu suất kinh doanh hàng ngày của bạn, bao gồm các chỉ số chính và xu hướng quan trọng.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="bg-blue-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <div class="text-sm font-medium text-gray-500 mb-2">Thu nhập hôm nay</div>
+                    <div id="daily-income" class="text-3xl font-bold text-blue-600">0 VNĐ</div>
+                </div>
+                <div class="bg-green-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <div class="text-sm font-medium text-gray-500 mb-2">Khách hàng tương tác</div>
+                    <div id="daily-customers" class="text-3xl font-bold text-green-600">0</div>
+                </div>
+                <div class="bg-red-50 p-6 rounded-lg shadow-md flex flex-col items-center">
+                    <div class="text-sm font-medium text-gray-500 mb-2">Lợi nhuận ước tính</div>
+                    <div id="daily-profit" class="text-3xl font-bold text-red-600">0 VNĐ</div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Xu hướng Thu nhập (7 ngày qua)</h3>
+                    <div class="chart-container">
+                        <canvas id="dailyIncomeChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Lợi nhuận theo Thực phẩm (Top 5)</h3>
+                    <div class="chart-container">
+                        <canvas id="profitByFoodChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Khách hàng Section -->
+        <section id="section-khachhang" class="content-section hidden bg-white p-6 shadow-lg rounded-xl mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Quản lý Khách hàng</h2>
+            <p class="text-gray-600 mb-6">Theo dõi thông tin và lịch sử tương tác với khách hàng của bạn để đảm bảo việc theo dõi hiệu quả.</p>
+
+            <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">Thêm khách hàng mới / Lịch theo dõi</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" id="customer-name" placeholder="Tên khách hàng" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="date" id="customer-last-contact" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="date" id="customer-next-followup" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <select id="customer-status" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">
+                    <option value="Đang theo dõi">Đang theo dõi</option>
+                    <option value="Đã liên hệ">Đã liên hệ</option>
+                    <option value="Đã hoàn thành">Đã hoàn thành</option>
+                    <option value="Tạm dừng">Tạm dừng</option>
+                </select>
+                <button id="add-customer-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm khách hàng</button>
+            </div>
+
+            <div class="overflow-x-auto rounded-lg shadow-md">
+                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Khách hàng</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày tương tác cuối</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Ngày theo dõi tiếp</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody id="customer-table-body">
+                        <!-- Customer data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Thực phẩm & Kho Section -->
+        <section id="section-thucphamkho" class="content-section hidden bg-white p-6 shadow-lg rounded-xl mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Quản lý Thực phẩm & Kho</h2>
+            <p class="text-gray-600 mb-6">Giám sát tồn kho thực phẩm, theo dõi chi phí mua hàng và quản lý các biến phí liên quan đến vận hành.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                <!-- Tồn kho thực phẩm -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Tồn kho thực phẩm</h3>
+                    <div class="grid grid-cols-1 gap-4 mb-4">
+                        <input type="text" id="food-item-name" placeholder="Tên thực phẩm" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <div class="flex gap-2">
+                            <input type="number" id="food-item-quantity" placeholder="Số lượng" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
+                            <input type="text" id="food-item-unit" placeholder="Đơn vị (kg, lít, cái...)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 w-full">
+                        </div>
+                    </div>
+                    <button id="add-food-item-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm/Cập nhật tồn kho</button>
+                    <div class="overflow-x-auto mt-4 rounded-lg shadow-md">
+                        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                            <thead>
+                                <tr>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Tên Thực phẩm</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số lượng</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Đơn vị</th>
+                                </tr>
+                            </thead>
+                            <tbody id="food-inventory-table-body">
+                                <!-- Food inventory data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Nhập/Mua hàng & Biến phí -->
+                <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                    <h3 class="text-lg font-semibold text-gray-700 mb-3">Nhập/Mua hàng & Biến phí</h3>
+                    <div class="grid grid-cols-1 gap-4 mb-4">
+                        <select id="expense-type" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="mua_thuc_pham">Mua thực phẩm</option>
+                            <option value="bien_phi_khac">Biến phí khác</option>
+                        </select>
+                        <input type="text" id="expense-description" placeholder="Mô tả (ví dụ: Thịt bò, Tiền điện)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <input type="number" id="expense-amount" placeholder="Số tiền/Giá (VNĐ)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                        <input type="date" id="expense-date" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    </div>
+                    <button id="add-expense-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm chi phí</button>
+                    <div class="overflow-x-auto mt-4 rounded-lg shadow-md">
+                        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                            <thead>
+                                <tr>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Loại</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Mô tả</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số tiền (VNĐ)</th>
+                                    <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Ngày</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expense-table-body">
+                                <!-- Expense data will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Tài chính Section -->
+        <section id="section-taichinh" class="content-section hidden bg-white p-6 shadow-lg rounded-xl mb-6">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Quản lý Tài chính</h2>
+            <p class="text-gray-600 mb-6">Phân tích chi tiết doanh thu, chi phí và lợi nhuận của bạn để đưa ra các quyết định tài chính sáng suốt.</p>
+
+            <div class="mb-6 bg-gray-50 p-4 rounded-lg shadow-sm">
+                <h3 class="text-lg font-semibold text-gray-700 mb-3">Thêm giao dịch bán hàng</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                    <input type="text" id="sale-item-name" placeholder="Tên sản phẩm/dịch vụ" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="number" id="sale-quantity" placeholder="Số lượng bán" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                    <input type="number" id="sale-price" placeholder="Doanh thu (VNĐ)" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                </div>
+                <input type="date" id="sale-date" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 mb-4">
+                <button id="add-sale-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm giao dịch</button>
+            </div>
+
+            <div class="overflow-x-auto mb-6 rounded-lg shadow-md">
+                <h3 class="text-lg font-semibold text-gray-800 mb-2 p-2">Doanh thu chi tiết</h3>
+                <table class="min-w-full bg-white rounded-lg overflow-hidden">
+                    <thead>
+                        <tr>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tl-lg">Ngày</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Sản phẩm/Dịch vụ</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider">Số lượng</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Doanh thu (VNĐ)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="sales-table-body">
+                        <!-- Sales data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Xu hướng Doanh thu & Lợi nhuận hàng tháng</h3>
+                    <div class="chart-container">
+                        <canvas id="monthlyFinancialChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const navItems = document.querySelectorAll('.nav-item');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        const dailyIncomeElement = document.getElementById('daily-income');
+        const dailyCustomersElement = document.getElementById('daily-customers');
+        const dailyProfitElement = document.getElementById('daily-profit');
+
+        let salesData = JSON.parse(localStorage.getItem('salesData')) || [];
+        let expensesData = JSON.parse(localStorage.getItem('expensesData')) || [];
+        let customersData = JSON.parse(localStorage.getItem('customersData')) || [];
+        let foodInventoryData = JSON.parse(localStorage.getItem('foodInventoryData')) || [];
+
+        let dailyIncomeChartInstance;
+        let profitByFoodChartInstance;
+        let monthlyFinancialChartInstance;
+
+        function showSection(sectionId) {
+            contentSections.forEach(section => {
+                section.classList.add('hidden');
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).classList.add('active');
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+            });
+            document.getElementById(`nav-${sectionId.replace('section-', '')}`).classList.add('active');
+
+            updateCharts();
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '';
+            const date = new Date(dateString);
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${day}/${month}/${year}`;
+        }
+
+        function formatCurrency(amount) {
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+        }
+
+        function calculateDailySummary() {
+            const today = new Date().toISOString().slice(0, 10);
+            const dailySales = salesData.filter(sale => sale.date === today);
+            const dailyExpenses = expensesData.filter(expense => expense.date === today);
+
+            const totalDailyIncome = dailySales.reduce((sum, sale) => sum + sale.price, 0);
+            const totalDailyExpense = dailyExpenses.reduce((sum, expense) => sum + expense.amount, 0);
+            const estimatedDailyProfit = totalDailyIncome - totalDailyExpense;
+
+            const uniqueCustomersToday = new Set(customersData.filter(customer => customer.lastContact === today).map(c => c.name)).size;
+
+            dailyIncomeElement.textContent = formatCurrency(totalDailyIncome);
+            dailyCustomersElement.textContent = uniqueCustomersToday;
+            dailyProfitElement.textContent = formatCurrency(estimatedDailyProfit);
+        }
+
+        function updateCustomerTable() {
+            const tbody = document.getElementById('customer-table-body');
+            tbody.innerHTML = '';
+            customersData.forEach(customer => {
+                const row = tbody.insertRow();
+                row.className = 'border-b border-gray-100 last:border-b-0';
+                row.insertCell().textContent = customer.name;
+                row.insertCell().textContent = formatDate(customer.lastContact);
+                row.insertCell().textContent = formatDate(customer.nextFollowup);
+                row.insertCell().textContent = customer.status;
+            });
+            localStorage.setItem('customersData', JSON.stringify(customersData));
+        }
+
+        function updateFoodInventoryTable() {
+            const tbody = document.getElementById('food-inventory-table-body');
+            tbody.innerHTML = '';
+            foodInventoryData.forEach(item => {
+                const row = tbody.insertRow();
+                row.className = 'border-b border-gray-100 last:border-b-0';
+                row.insertCell().textContent = item.name;
+                row.insertCell().textContent = item.quantity;
+                row.insertCell().textContent = item.unit;
+            });
+            localStorage.setItem('foodInventoryData', JSON.stringify(foodInventoryData));
+        }
+
+        function updateExpenseTable() {
+            const tbody = document.getElementById('expense-table-body');
+            tbody.innerHTML = '';
+            expensesData.forEach(expense => {
+                const row = tbody.insertRow();
+                row.className = 'border-b border-gray-100 last:border-b-0';
+                row.insertCell().textContent = expense.type === 'mua_thuc_pham' ? 'Mua thực phẩm' : 'Biến phí khác';
+                row.insertCell().textContent = expense.description;
+                row.insertCell().textContent = formatCurrency(expense.amount);
+                row.insertCell().textContent = formatDate(expense.date);
+            });
+            localStorage.setItem('expensesData', JSON.stringify(expensesData));
+        }
+
+        function updateSalesTable() {
+            const tbody = document.getElementById('sales-table-body');
+            tbody.innerHTML = '';
+            salesData.forEach(sale => {
+                const row = tbody.insertRow();
+                row.className = 'border-b border-gray-100 last:border-b-0';
+                row.insertCell().textContent = formatDate(sale.date);
+                row.insertCell().textContent = sale.itemName;
+                row.insertCell().textContent = sale.quantity;
+                row.insertCell().textContent = formatCurrency(sale.price);
+            });
+            localStorage.setItem('salesData', JSON.stringify(salesData));
+        }
+
+        function updateCharts() {
+            if (dailyIncomeChartInstance) dailyIncomeChartInstance.destroy();
+            if (profitByFoodChartInstance) profitByFoodChartInstance.destroy();
+            if (monthlyFinancialChartInstance) monthlyFinancialChartInstance.destroy();
+
+            drawDailyIncomeChart();
+            drawProfitByFoodChart();
+            drawMonthlyFinancialChart();
+        }
+
+        function wrapLabels(label, index, labels) {
+            const MAX_CHAR_PER_LINE = 16;
+            if (label.length > MAX_CHAR_PER_LINE) {
+                const words = label.split(' ');
+                let lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length <= MAX_CHAR_PER_LINE) {
+                        currentLine += (currentLine === '' ? '' : ' ') + word;
+                    } else {
+                        lines.push(currentLine);
+                        currentLine = word;
+                    }
+                });
+                lines.push(currentLine);
+                return lines;
+            }
+            return label;
+        }
+
+        function drawDailyIncomeChart() {
+            const ctx = document.getElementById('dailyIncomeChart').getContext('2d');
+            const last7Days = Array.from({ length: 7 }, (_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - (6 - i));
+                return d.toISOString().slice(0, 10);
+            });
+
+            const incomeByDay = last7Days.map(date => {
+                return salesData.filter(sale => sale.date === date)
+                                .reduce((sum, sale) => sum + sale.price, 0);
+            });
+
+            dailyIncomeChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: last7Days.map(d => formatDate(d)),
+                    datasets: [{
+                        label: 'Thu nhập (VNĐ)',
+                        data: incomeByDay,
+                        borderColor: '#4CAF50',
+                        backgroundColor: 'rgba(76, 175, 80, 0.2)',
+                        fill: true,
+                        tension: 0.3
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số tiền (VNĐ)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Ngày'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawProfitByFoodChart() {
+            const ctx = document.getElementById('profitByFoodChart').getContext('2d');
+
+            const foodSales = {};
+            salesData.forEach(sale => {
+                foodSales[sale.itemName] = (foodSales[sale.itemName] || 0) + sale.price;
+            });
+
+            const foodExpenses = {};
+            expensesData.filter(exp => exp.type === 'mua_thuc_pham').forEach(exp => {
+                foodExpenses[exp.description] = (foodExpenses[exp.description] || 0) + exp.amount;
+            });
+
+            const foodProfit = {};
+            for (const item in foodSales) {
+                const cost = foodExpenses[item] || 0;
+                foodProfit[item] = foodSales[item] - cost;
+            }
+
+            const sortedFoodProfit = Object.entries(foodProfit).sort(([,a],[,b]) => b - a).slice(0, 5);
+            const labels = sortedFoodProfit.map(entry => entry[0]);
+            const data = sortedFoodProfit.map(entry => entry[1]);
+
+            profitByFoodChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Lợi nhuận (VNĐ)',
+                        data: data,
+                        backgroundColor: '#FFC107',
+                        borderColor: '#FFB300',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Lợi nhuận (VNĐ)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Loại Thực phẩm'
+                            },
+                            ticks: {
+                                callback: wrapLabels
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function drawMonthlyFinancialChart() {
+            const ctx = document.getElementById('monthlyFinancialChart').getContext('2d');
+
+            const monthlyData = {};
+
+            salesData.forEach(sale => {
+                const month = sale.date.slice(0, 7);
+                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0 };
+                monthlyData[month].income += sale.price;
+            });
+
+            expensesData.forEach(expense => {
+                const month = expense.date.slice(0, 7);
+                if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0 };
+                monthlyData[month].expenses += expense.amount;
+            });
+
+            const sortedMonths = Object.keys(monthlyData).sort();
+            const monthlyIncomes = sortedMonths.map(month => monthlyData[month].income);
+            const monthlyExpenses = sortedMonths.map(month => monthlyData[month].expenses);
+            const monthlyProfits = sortedMonths.map(month => monthlyData[month].income - monthlyData[month].expenses);
+
+            monthlyFinancialChartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: sortedMonths,
+                    datasets: [
+                        {
+                            label: 'Doanh thu hàng tháng (VNĐ)',
+                            data: monthlyIncomes,
+                            borderColor: '#42A5F5',
+                            backgroundColor: 'rgba(66, 165, 245, 0.2)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Chi phí hàng tháng (VNĐ)',
+                            data: monthlyExpenses,
+                            borderColor: '#EF5350',
+                            backgroundColor: 'rgba(239, 83, 80, 0.2)',
+                            fill: true,
+                            tension: 0.3
+                        },
+                        {
+                            label: 'Lợi nhuận hàng tháng (VNĐ)',
+                            data: monthlyProfits,
+                            borderColor: '#66BB6A',
+                            backgroundColor: 'rgba(102, 187, 106, 0.2)',
+                            fill: true,
+                            tension: 0.3
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Số tiền (VNĐ)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Tháng'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize display and data
+        function initializeApp() {
+            showSection('section-tongquan');
+            calculateDailySummary();
+            updateCustomerTable();
+            updateFoodInventoryTable();
+            updateExpenseTable();
+            updateSalesTable();
+            updateCharts();
+        }
+
+        // Event Listeners for Navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = `section-${item.id.replace('nav-', '')}`;
+                showSection(sectionId);
+            });
+        });
+
+        // Event Listeners for Forms
+        document.getElementById('add-customer-btn').addEventListener('click', () => {
+            const name = document.getElementById('customer-name').value.trim();
+            const lastContact = document.getElementById('customer-last-contact').value;
+            const nextFollowup = document.getElementById('customer-next-followup').value;
+            const status = document.getElementById('customer-status').value;
+
+            if (name && lastContact && nextFollowup) {
+                customersData.push({ name, lastContact, nextFollowup, status });
+                updateCustomerTable();
+                calculateDailySummary();
+                document.getElementById('customer-name').value = '';
+                document.getElementById('customer-last-contact').value = '';
+                document.getElementById('customer-next-followup').value = '';
+            } else {
+                console.log('Vui lòng điền đầy đủ thông tin khách hàng.');
+            }
+        });
+
+        document.getElementById('add-food-item-btn').addEventListener('click', () => {
+            const name = document.getElementById('food-item-name').value.trim();
+            const quantity = parseFloat(document.getElementById('food-item-quantity').value);
+            const unit = document.getElementById('food-item-unit').value.trim();
+
+            if (name && !isNaN(quantity) && unit) {
+                const existingItemIndex = foodInventoryData.findIndex(item => item.name.toLowerCase() === name.toLowerCase());
+                if (existingItemIndex > -1) {
+                    foodInventoryData[existingItemIndex].quantity += quantity;
+                    foodInventoryData[existingItemIndex].unit = unit;
+                } else {
+                    foodInventoryData.push({ name, quantity, unit });
+                }
+                updateFoodInventoryTable();
+                document.getElementById('food-item-name').value = '';
+                document.getElementById('food-item-quantity').value = '';
+                document.getElementById('food-item-unit').value = '';
+            } else {
+                console.log('Vui lòng điền đầy đủ thông tin tồn kho.');
+            }
+        });
+
+        document.getElementById('add-expense-btn').addEventListener('click', () => {
+            const type = document.getElementById('expense-type').value;
+            const description = document.getElementById('expense-description').value.trim();
+            const amount = parseFloat(document.getElementById('expense-amount').value);
+            const date = document.getElementById('expense-date').value;
+
+            if (description && !isNaN(amount) && date) {
+                expensesData.push({ type, description, amount, date });
+                updateExpenseTable();
+                calculateDailySummary();
+                updateCharts();
+                document.getElementById('expense-description').value = '';
+                document.getElementById('expense-amount').value = '';
+                document.getElementById('expense-date').value = '';
+            } else {
+                console.log('Vui lòng điền đầy đủ thông tin chi phí.');
+            }
+        });
+
+        document.getElementById('add-sale-btn').addEventListener('click', () => {
+            const itemName = document.getElementById('sale-item-name').value.trim();
+            const quantity = parseFloat(document.getElementById('sale-quantity').value);
+            const price = parseFloat(document.getElementById('sale-price').value);
+            const date = document.getElementById('sale-date').value;
+
+            if (itemName && !isNaN(quantity) && !isNaN(price) && date) {
+                salesData.push({ itemName, quantity, price, date });
+                updateSalesTable();
+                calculateDailySummary();
+                updateCharts();
+                document.getElementById('sale-item-name').value = '';
+                document.getElementById('sale-quantity').value = '';
+                document.getElementById('sale-price').value = '';
+                document.getElementById('sale-date').value = '';
+            } else {
+                console.log('Vui lòng điền đầy đủ thông tin bán hàng.');
+            }
+        });
+
+        initializeApp();
+    </script>
+</body>
+</html>
