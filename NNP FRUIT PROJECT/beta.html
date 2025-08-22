@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NNP FRUIT ANALYSIS</title>
+    <title>NNP|FRUIT🥝</title>
     <link rel="icon" type="image/x-icon" href="NNP.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -11,8 +11,61 @@
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #F8F7F4;
+            background-color: #F8F7F4; /* Light mode default */
+            display: flex; /* Ensure body is flex for main layout */
+            min-height: 100vh; /* Full viewport height */
+            color: #333; /* Default text color for light mode */
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+        body.dark-mode {
+            background-color: #1a202c; /* Dark mode background */
+            color: #e2e8f0; /* Dark mode text color */
+        }
+        .dark-mode .bg-white {
+            background-color: #2d3748; /* Darker background for cards */
+        }
+        .dark-mode .bg-gray-50 {
+            background-color: #4a5568; /* Darker background for gray sections */
+        }
+        .dark-mode .text-gray-800 {
+            color: #e2e8f0;
+        }
+        .dark-mode .text-gray-700 {
+            color: #cbd5e0;
+        }
+        .dark-mode .text-gray-600 {
+            color: #a0aec0;
+        }
+        .dark-mode .border {
+            border-color: #4a5568;
+        }
+        .dark-mode .nav-item {
+            color: #e2e8f0;
+        }
+        .dark-mode .nav-item.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .dark-mode .nav-item:hover {
+            background-color: #4a5568;
+        }
+        .dark-mode table th {
+            background-color: #2d3748;
+            color: #e2e8f0;
+        }
+        .dark-mode table td {
+            border-color: #4a5568;
+        }
+        .dark-mode input, .dark-mode select {
+            background-color: #4a5568;
+            color: #e2e8f0;
+            border-color: #616e7f;
+        }
+        .dark-mode input:focus, .dark-mode select:focus {
+            border-color: #63b3ed;
+            box-shadow: 0 0 0 2px rgba(66, 153, 225, 0.5);
+        }
+
         .chart-container {
             position: relative;
             width: 100%;
@@ -68,6 +121,76 @@
             color: #2e7d32; /* Darker green */
             font-weight: 500;
         }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+        }
+        .dark-mode .modal-content {
+            background-color: #2d3748;
+        }
+        .modal-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        /* Toast Styles */
+        #toast-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1001;
+            display: flex;
+            flex-direction: column-reverse; /* New toasts appear at the bottom */
+            gap: 10px;
+        }
+        .toast {
+            background-color: #333;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            min-width: 200px;
+            text-align: center;
+        }
+        .toast.show {
+            opacity: 1;
+        }
+        .toast.success {
+            background-color: #4CAF50;
+        }
+        .toast.error {
+            background-color: #f44336;
+        }
+        .toast.info {
+            background-color: #2196F3;
+        }
+
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
@@ -76,38 +199,43 @@
         <div class="text-xl font-bold text-gray-800 mb-6">Quản lý Kinh doanh</div>
         <ul class="space-y-2">
             <li>
-                <button id="nav-tongquan" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700 active">
+                <button id="nav-tongquan" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700 active">
                     Tổng quan
                 </button>
             </li>
             <li>
-                <button id="nav-khachhang" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                <button id="nav-khachhang" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Khách hàng
                 </button>
             </li>
             <li>
-                <button id="nav-thucphamkho" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                <button id="nav-thucphamkho" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Thực phẩm & Kho
                 </button>
             </li>
             <li>
-                <button id="nav-taichinh" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                <button id="nav-taichinh" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Tài chính
                 </button>
             </li>
             <li>
-                <button id="nav-quanlymathang" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                <button id="nav-quanlymathang" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Quản lý Mặt hàng
                 </button>
             </li>
             <li>
-                <button id="nav-quanlykhuyenmai" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                <button id="nav-quanlykhuyenmai" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Quản lý Khuyến mãi
                 </button>
             </li>
             <li>
-                <button id="nav-quanlydulieu" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
+                <button id="nav-quanlydulieu" class="nav-item nav-section-btn w-full text-left p-3 rounded-lg hover:bg-gray-100 transition duration-200 ease-in-out font-medium text-gray-700">
                     Quản lý Dữ liệu
+                </button>
+            </li>
+            <li class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                <button id="theme-toggle" class="nav-item w-full text-left p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition duration-200 ease-in-out font-medium text-gray-700 dark:text-gray-200">
+                    Chế độ <span id="current-theme">Sáng ☀️</span>
                 </button>
             </li>
         </ul>
@@ -155,22 +283,31 @@
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Xu hướng Thu nhập (7 ngày qua)</h3>
+                <div id="daily-income-chart-card" class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Xu hướng Thu nhập (7 ngày qua)</h3>
+                        <button class="toggle-chart-visibility bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-md text-sm" data-target="daily-income-chart-card">Ẩn</button>
+                    </div>
                     <div class="chart-container">
                         <canvas id="dailyIncomeChart"></canvas>
                     </div>
                 </div>
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Lợi nhuận theo Thực phẩm (Top 5)</h3>
+                <div id="profit-by-food-chart-card" class="bg-white p-4 rounded-lg shadow-md">
+                     <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Lợi nhuận theo Thực phẩm (Top 5)</h3>
+                        <button class="toggle-chart-visibility bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-md text-sm" data-target="profit-by-food-chart-card">Ẩn</button>
+                    </div>
                     <div class="chart-container">
                         <canvas id="profitByFoodChart"></canvas>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-gray-50 p-4 rounded-lg shadow-sm">
-                <h3 class="text-lg font-semibold text-gray-700 mb-3">Hiệu suất KPI hàng ngày</h3>
+            <div id="daily-kpi-card" class="bg-gray-50 p-4 rounded-lg shadow-sm">
+                 <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold text-gray-700">Hiệu suất KPI hàng ngày</h3>
+                    <button class="toggle-chart-visibility bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-md text-sm" data-target="daily-kpi-card">Ẩn</button>
+                </div>
                 <div class="mb-4">
                     <label for="kpi-target-percentage" class="block text-sm font-medium text-gray-700 mb-1">Ngưỡng đạt chỉ tiêu KPI (%):</label>
                     <input type="number" id="kpi-target-percentage" value="80" min="0" max="100" class="p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-1/2">
@@ -216,6 +353,15 @@
                         <option value="Tạm dừng">Tạm dừng</option>
                     </select>
                 </div>
+                <div class="mb-4">
+                    <label for="customer-tier" class="block text-sm font-medium text-gray-700 mb-1">Hạng khách hàng:</label>
+                    <select id="customer-tier" class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="Thành viên">Thành viên</option>
+                        <option value="Bạc">Bạc</option>
+                        <option value="Vàng">Vàng</option>
+                        <option value="Kim cương">Kim cương</option>
+                    </select>
+                </div>
                 <button id="add-customer-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out w-full">Thêm khách hàng</button>
             </div>
 
@@ -230,6 +376,7 @@
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="status">Trạng thái &#x25B2;&#x25BC;</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="purchaseCount">Lượt mua &#x25B2;&#x25BC;</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="loyaltyPoints">Điểm tích lũy &#x25B2;&#x25BC;</th>
+                            <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider cursor-pointer" data-sort-key="tier">Hạng &#x25B2;&#x25BC;</th>
                             <th class="py-3 px-4 bg-gray-200 text-gray-700 font-semibold text-sm uppercase tracking-wider rounded-tr-lg">Hành động</th>
                         </tr>
                     </thead>
@@ -392,11 +539,23 @@
                 <button id="export-sales-csv-btn" class="mt-4 bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition duration-200 ease-in-out w-full">Xuất CSV Doanh thu</button>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-1 gap-6">
-                <div class="bg-white p-4 rounded-lg shadow-md">
-                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Xu hướng Doanh thu & Lợi nhuận hàng tháng</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <div id="monthly-financial-chart-card" class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Xu hướng Doanh thu & Lợi nhuận hàng tháng</h3>
+                        <button class="toggle-chart-visibility bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-md text-sm" data-target="monthly-financial-chart-card">Ẩn</button>
+                    </div>
                     <div class="chart-container">
                         <canvas id="monthlyFinancialChart"></canvas>
+                    </div>
+                </div>
+                <div id="profit-by-customer-chart-card" class="bg-white p-4 rounded-lg shadow-md">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Lợi nhuận theo Khách hàng (Top 5)</h3>
+                        <button class="toggle-chart-visibility bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 px-3 py-1 rounded-md text-sm" data-target="profit-by-customer-chart-card">Ẩn</button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="profitByCustomerChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -498,8 +657,26 @@
         </section>
     </main>
 
+    <!-- Custom Modal for Alerts and Confirms -->
+    <div id="custom-modal" class="modal hidden">
+        <div class="modal-content">
+            <h3 id="modal-title" class="text-xl font-semibold text-gray-800 mb-4"></h3>
+            <p id="modal-message" class="text-gray-700 mb-6"></p>
+            <div class="modal-buttons">
+                <button id="modal-confirm-btn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-200 ease-in-out hidden">Xác nhận</button>
+                <button id="modal-cancel-btn" class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition duration-200 ease-in-out hidden">Hủy</button>
+                <button id="modal-ok-btn" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition duration-200 ease-in-out hidden">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container"></div>
+
+
     <script>
-        const navItems = document.querySelectorAll('.nav-item');
+        // Modified: Select only actual section navigation buttons
+        const navSectionButtons = document.querySelectorAll('.nav-item.nav-section-btn');
         const contentSections = document.querySelectorAll('.content-section');
 
         const totalIncomeRangeElement = document.getElementById('total-income-range');
@@ -525,6 +702,7 @@
         let dailyIncomeChartInstance;
         let profitByFoodChartInstance;
         let monthlyFinancialChartInstance;
+        let profitByCustomerChartInstance;
 
         let editingCustomerUUID = null;
         let editingFoodInventoryUUID = null;
@@ -537,19 +715,106 @@
         const MIN_LOYALTY_PURCHASES = 3;
         const LOYALTY_POINTS_PER_PURCHASE = 1;
 
+        // Custom Modal Elements
+        const customModal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalConfirmBtn = document.getElementById('modal-confirm-btn');
+        const modalCancelBtn = document.getElementById('modal-cancel-btn');
+        const modalOkBtn = document.getElementById('modal-ok-btn');
+        const toastContainer = document.getElementById('toast-container');
+
+
+        /**
+         * Shows a custom modal dialog.
+         * @param {string} title - The title of the modal.
+         * @param {string} message - The message to display in the modal.
+         * @param {string} type - 'alert' or 'confirm'.
+         * @returns {Promise<boolean>} - Resolves to true for 'OK'/'Confirm', false for 'Cancel'.
+         */
+        function showCustomModal(title, message, type = 'alert') {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+
+            modalConfirmBtn.classList.add('hidden');
+            modalCancelBtn.classList.add('hidden');
+            modalOkBtn.classList.add('hidden');
+
+            return new Promise((resolve) => {
+                if (type === 'confirm') {
+                    modalConfirmBtn.classList.remove('hidden');
+                    modalCancelBtn.classList.remove('hidden');
+                    modalConfirmBtn.onclick = () => {
+                        customModal.classList.add('hidden');
+                        resolve(true);
+                    };
+                    modalCancelBtn.onclick = () => {
+                        customModal.classList.add('hidden');
+                        resolve(false);
+                    };
+                } else { // type === 'alert'
+                    modalOkBtn.classList.remove('hidden');
+                    modalOkBtn.onclick = () => {
+                        customModal.classList.add('hidden');
+                        resolve(true);
+                    };
+                }
+                customModal.classList.remove('hidden');
+            });
+        }
+
+        /**
+         * Shows a toast notification.
+         * @param {string} message - The message to display.
+         * @param {string} type - 'success', 'error', 'info' (default).
+         * @param {number} duration - How long the toast should be visible in milliseconds.
+         */
+        function showToast(message, type = 'info', duration = 3000) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.textContent = message;
+            toastContainer.appendChild(toast);
+
+            // Show the toast
+            setTimeout(() => toast.classList.add('show'), 10);
+
+            // Hide and remove after duration
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, duration);
+        }
 
         function showSection(sectionId) {
             contentSections.forEach(section => {
                 section.classList.add('hidden');
                 section.classList.remove('active');
             });
-            document.getElementById(sectionId).classList.remove('hidden');
-            document.getElementById(sectionId).classList.add('active');
 
-            navItems.forEach(item => {
+            // Added robustness check for targetSection
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.remove('hidden');
+                targetSection.classList.add('active');
+            } else {
+                console.error(`Section with ID ${sectionId} not found.`);
+                return; // Exit if section not found
+            }
+
+            // Modified: Use navSectionButtons
+            navSectionButtons.forEach(item => {
                 item.classList.remove('active');
             });
-            document.getElementById(`nav-${sectionId.replace('section-', '')}`).classList.add('active');
+
+            // Added robustness check for targetNavElement
+            const navElementId = `nav-${sectionId.replace('section-', '')}`;
+            const targetNavElement = document.getElementById(navElementId);
+            if (targetNavElement) {
+                targetNavElement.classList.add('active');
+            } else {
+                console.error(`Navigation item with ID ${navElementId} not found.`);
+            }
+
 
             updateAllTables();
             updateProductDatalist();
@@ -562,6 +827,8 @@
                 calculateSummaryForDateRange();
                 updateDailyKpiTable();
             }
+             // Reset discount text when changing sections
+            document.getElementById('discount-applied-text').textContent = 'Chưa áp dụng giảm giá';
         }
 
         function formatDate(dateString) {
@@ -574,7 +841,7 @@
         }
 
         function formatCurrency(amount) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'VND' }).format(amount);
+            return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
         }
 
         function calculateSummaryForDateRange() {
@@ -646,6 +913,7 @@
                 row.insertCell().textContent = customer.status;
                 row.insertCell().textContent = customer.purchaseCount || 0;
                 row.insertCell().textContent = customer.loyaltyPoints || 0;
+                row.insertCell().textContent = customer.tier || 'Thành viên';
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
                     <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${customer.uuid}">Sửa</button>
@@ -704,7 +972,7 @@
                 row.insertCell().textContent = item.name;
                 row.insertCell().textContent = `${item.quantity} ${item.unit}`;
                 row.insertCell().textContent = item.unit; // Display unit in a separate column
-                row.insertCell().textContent = item.expiryDate ? formatDate(item.expiryDate) + (daysUntilExpiry !== 'N/A' ? ` (${daysUntilExpiry} days left)` : '') : 'N/A';
+                row.insertCell().textContent = item.expiryDate ? formatDate(item.expiryDate) + (daysUntilExpiry !== 'N/A' ? ` (${daysUntilExpiry} ngày)` : '') : 'N/A';
                 const actionCell = row.insertCell();
                 actionCell.innerHTML = `
                     <button class="edit-btn bg-yellow-500 text-white px-2 py-1 rounded-md text-sm hover:bg-yellow-600 mr-2" data-uuid="${item.uuid}">Sửa</button>
@@ -878,10 +1146,12 @@
             if (dailyIncomeChartInstance) dailyIncomeChartInstance.destroy();
             if (profitByFoodChartInstance) profitByFoodChartInstance.destroy();
             if (monthlyFinancialChartInstance) monthlyFinancialChartInstance.destroy();
+            if (profitByCustomerChartInstance) profitByCustomerChartInstance.destroy();
 
             drawDailyIncomeChart();
             drawProfitByFoodChart();
             drawMonthlyFinancialChart();
+            drawProfitByCustomerChart();
         }
 
         function wrapLabels(label, index, labels) {
@@ -1047,19 +1317,51 @@
 
             const monthlyData = {};
 
-            salesData.forEach(sale => {
+            // Filter data based on date range for accurate monthly charts
+            const start = startDateFilter.value ? new Date(startDateFilter.value) : null;
+            const end = endDateFilter.value ? new Date(endDateFilter.value) : null;
+
+            let relevantSales = salesData;
+            let relevantOtherExpenses = otherExpensesData;
+            let relevantPurchases = purchaseHistoryData;
+
+            if (start && end) {
+                relevantSales = salesData.filter(sale => {
+                    const saleDate = new Date(sale.date);
+                    return saleDate >= start && saleDate <= end;
+                });
+                relevantOtherExpenses = otherExpensesData.filter(expense => {
+                    const expenseDate = new Date(expense.date);
+                    return expenseDate >= start && expenseDate <= end;
+                });
+                relevantPurchases = purchaseHistoryData.filter(purchase => {
+                    const purchaseDate = new Date(purchase.date);
+                    return purchaseDate >= start && purchaseDate <= end;
+                });
+            } else if (start) {
+                relevantSales = salesData.filter(sale => new Date(sale.date) >= start);
+                relevantOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) >= start);
+                relevantPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) >= start);
+            } else if (end) {
+                relevantSales = salesData.filter(sale => new Date(sale.date) <= end);
+                relevantOtherExpenses = otherExpensesData.filter(expense => new Date(expense.date) <= end);
+                relevantPurchases = purchaseHistoryData.filter(purchase => new Date(purchase.date) <= end);
+            }
+
+
+            relevantSales.forEach(sale => {
                 const month = sale.date.slice(0, 7);
                 if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].income += sale.price;
             });
 
-            otherExpensesData.forEach(expense => {
+            relevantOtherExpenses.forEach(expense => {
                 const month = expense.date.slice(0, 7);
                 if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].expenses += expense.amount;
             });
 
-            purchaseHistoryData.forEach(purchase => {
+            relevantPurchases.forEach(purchase => {
                 const month = purchase.date.slice(0, 7);
                 if (!monthlyData[month]) monthlyData[month] = { income: 0, expenses: 0, purchaseCosts: 0 };
                 monthlyData[month].purchaseCosts += purchase.totalCost;
@@ -1138,10 +1440,114 @@
             });
         }
 
+        function drawProfitByCustomerChart() {
+            const ctx = document.getElementById('profitByCustomerChart').getContext('2d');
+
+            const customerProfit = {};
+
+            // Filter data based on date range for accurate customer charts
+            const start = startDateFilter.value ? new Date(startDateFilter.value) : null;
+            const end = endDateFilter.value ? new Date(endDateFilter.value) : null;
+
+            let relevantSales = salesData;
+            if (start && end) {
+                relevantSales = salesData.filter(sale => {
+                    const saleDate = new Date(sale.date);
+                    return saleDate >= start && saleDate <= end;
+                });
+            } else if (start) {
+                relevantSales = salesData.filter(sale => new Date(sale.date) >= start);
+            } else if (end) {
+                relevantSales = salesData.filter(sale => new Date(sale.date) <= end);
+            }
+
+
+            relevantSales.forEach(sale => {
+                if (sale.customerPhone) {
+                    const customer = customersData.find(c => c.phoneNumber === sale.customerPhone);
+                    if (customer) {
+                        customerProfit[customer.name] = (customerProfit[customer.name] || 0) + sale.price;
+                        // For a more accurate profit by customer, we would also need to deduct the cost of goods sold for each sale.
+                        // For simplicity in this client-side app, we're using revenue here.
+                        // If 'productItemsData' contained a 'costPrice' per item, we could do:
+                        // const product = productItemsData.find(p => p.name.toLowerCase() === sale.itemName.toLowerCase());
+                        // if (product) {
+                        //     customerProfit[customer.name] -= (product.costPrice * sale.quantity);
+                        // }
+                    }
+                }
+            });
+
+            const sortedCustomerProfit = Object.entries(customerProfit).sort(([,a],[,b]) => b - a).slice(0, 5);
+            const labels = sortedCustomerProfit.map(entry => entry[0]);
+            const data = sortedCustomerProfit.map(entry => entry[1]);
+
+            profitByCustomerChartInstance = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Revenue by Customer (VND)', // Using revenue as a proxy for profit
+                        data: data,
+                        backgroundColor: '#9C27B0',
+                        borderColor: '#8E24AA',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.dataset.label + ': ' + formatCurrency(context.raw);
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Revenue (VND)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return formatCurrency(value);
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Customer'
+                            },
+                            ticks: {
+                                callback: wrapLabels
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+
         function initializeApp() {
             const today = new Date().toISOString().slice(0, 10);
             startDateFilter.value = today;
             endDateFilter.value = today;
+
+            // Load theme preference
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('current-theme').textContent = 'Tối 🌑';
+            } else {
+                document.body.classList.remove('dark-mode');
+                document.getElementById('current-theme').textContent = 'Sáng ☀️';
+            }
 
             showSection('section-tongquan');
             calculateSummaryForDateRange();
@@ -1211,9 +1617,12 @@
             });
 
             tbody.querySelectorAll('.delete-btn').forEach(button => {
-                button.addEventListener('click', (event) => {
+                button.addEventListener('click', async (event) => { // Use async here
                     const uuid = event.target.dataset.uuid;
-                    deleteItem(dataType, uuid);
+                    const confirmed = await showCustomModal('Xác nhận xóa', 'Bạn có chắc chắn muốn xóa mục này không?', 'confirm');
+                    if (confirmed) {
+                        deleteItem(dataType, uuid);
+                    }
                 });
             });
 
@@ -1314,7 +1723,8 @@
                         phoneNumber: document.getElementById('customer-phone'),
                         lastContact: document.getElementById('customer-last-contact'),
                         nextFollowup: document.getElementById('customer-next-followup'),
-                        status: document.getElementById('customer-status')
+                        status: document.getElementById('customer-status'),
+                        tier: document.getElementById('customer-tier')
                     };
                     addBtn = document.getElementById('add-customer-btn');
                     editingUUIDField = 'editingCustomerUUID';
@@ -1398,14 +1808,12 @@
                         formElements[key].value = item[key];
                     }
                 }
-                addBtn.textContent = 'Update';
+                addBtn.textContent = 'Cập nhật';
                 window[editingUUIDField] = uuid;
             }
         }
 
-        function deleteItem(dataType, uuid) {
-            if (!confirm('Are you sure you want to delete this item?')) return;
-
+        async function deleteItem(dataType, uuid) {
             let dataArray;
             let updateTableFunc;
             let calculateSummaryNeeded = false;
@@ -1486,7 +1894,9 @@
                 if (calculateSummaryNeeded) updateSummaryKPIs();
                 if (updateChartsNeeded) updateCharts();
                 updateProductDatalist();
-                alert('Item deleted successfully!');
+                showToast('Mục đã được xóa thành công!', 'success');
+            } else {
+                 showToast('Không tìm thấy mục để xóa.', 'error');
             }
         }
 
@@ -1495,12 +1905,13 @@
         }
 
 
-        document.getElementById('add-customer-btn').addEventListener('click', () => {
+        document.getElementById('add-customer-btn').addEventListener('click', async () => {
             const name = document.getElementById('customer-name').value.trim();
             const phoneNumber = document.getElementById('customer-phone').value.trim();
             const lastContact = document.getElementById('customer-last-contact').value;
             const nextFollowup = document.getElementById('customer-next-followup').value;
             const status = document.getElementById('customer-status').value;
+            const tier = document.getElementById('customer-tier').value;
 
             if (name && phoneNumber && lastContact && nextFollowup) {
                 if (editingCustomerUUID) {
@@ -1511,17 +1922,18 @@
                         customer.lastContact = lastContact;
                         customer.nextFollowup = nextFollowup;
                         customer.status = status;
-                        alert('Customer info updated successfully!');
+                        customer.tier = tier;
+                        showToast('Thông tin khách hàng đã được cập nhật!', 'success');
                     }
                     editingCustomerUUID = null;
                     document.getElementById('add-customer-btn').textContent = 'Thêm khách hàng';
                 } else {
                     if (customersData.some(c => c.phoneNumber === phoneNumber)) {
-                        alert('Customer with this phone number already exists!');
+                        await showCustomModal('Lỗi', 'Khách hàng với số điện thoại này đã tồn tại!', 'alert');
                         return;
                     }
-                    customersData.push({ uuid: crypto.randomUUID(), name, phoneNumber, lastContact, nextFollowup, status, purchaseCount: 0, loyaltyPoints: 0 });
-                    alert('Customer added successfully!');
+                    customersData.push({ uuid: crypto.randomUUID(), name, phoneNumber, lastContact, nextFollowup, status, purchaseCount: 0, loyaltyPoints: 0, tier });
+                    showToast('Khách hàng đã được thêm!', 'success');
                 }
                 updateCustomerTable();
                 calculateSummaryForDateRange();
@@ -1529,12 +1941,13 @@
                 document.getElementById('customer-phone').value = '';
                 document.getElementById('customer-last-contact').value = '';
                 document.getElementById('customer-next-followup').value = '';
+                document.getElementById('customer-tier').value = 'Thành viên';
             } else {
-                alert('Please fill in all customer information.');
+                await showCustomModal('Lỗi', 'Vui lòng điền đầy đủ thông tin khách hàng.', 'alert');
             }
         });
 
-        document.getElementById('add-food-item-btn').addEventListener('click', () => {
+        document.getElementById('add-food-item-btn').addEventListener('click', async () => {
             const name = document.getElementById('food-item-name').value.trim();
             const quantity = parseFloat(document.getElementById('food-item-quantity').value);
             const unit = document.getElementById('food-item-unit').value.trim();
@@ -1546,19 +1959,19 @@
                         foodItem.name = name;
                         foodItem.quantity = quantity;
                         foodItem.unit = unit;
-                        // Expiry date is typically set on purchase, not direct inventory edit, so keep as is
-                        alert('Food inventory updated successfully!');
+                        showToast('Tồn kho thực phẩm đã được cập nhật!', 'success');
                     }
                     editingFoodInventoryUUID = null;
                     document.getElementById('add-food-item-btn').textContent = 'Thêm/Cập nhật tồn kho';
                 } else {
+                    // Automatically add to product items if it doesn't exist
                     if (!productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
                         productItemsData.push({ uuid: crypto.randomUUID(), name: name, defaultUnit: unit, defaultSellingPrice: 0, shelfLifeDays: 0, dailyTargetQuantity: 0, dailyTargetUnit: '' });
                         updateProductItemsTable();
                         updateProductDatalist();
                     }
                     foodInventoryData.push({ uuid: crypto.randomUUID(), name, quantity, unit, expiryDate: '' }); // Expiry set on purchase
-                    alert('Food inventory added successfully!');
+                    showToast('Tồn kho thực phẩm đã được thêm!', 'success');
                 }
                 updateFoodInventoryTable();
                 document.getElementById('food-item-name').value = '';
@@ -1566,11 +1979,11 @@
                 document.getElementById('food-item-unit').value = '';
                 updateCharts();
             } else {
-                alert('Please fill in all food inventory information.');
+                await showCustomModal('Lỗi', 'Vui lòng điền đầy đủ thông tin tồn kho thực phẩm.', 'alert');
             }
         });
 
-        document.getElementById('add-purchase-btn').addEventListener('click', () => {
+        document.getElementById('add-purchase-btn').addEventListener('click', async () => {
             const itemName = document.getElementById('purchase-item-name').value.trim();
             const quantity = parseFloat(document.getElementById('purchase-quantity').value);
             const unit = document.getElementById('purchase-unit').value.trim();
@@ -1599,20 +2012,23 @@
 
                         // Apply new data
                         Object.assign(existingPurchase, purchase);
-                        alert('Purchase transaction updated successfully!');
+                        showToast('Giao dịch mua hàng đã được cập nhật!', 'success');
                     }
                     editingPurchaseHistoryUUID = null;
                     document.getElementById('add-purchase-btn').textContent = 'Thêm Giao dịch Mua';
                 } else {
                     purchaseHistoryData.push(purchase);
-                    alert('Purchase transaction added successfully!');
+                    showToast('Giao dịch mua hàng đã được thêm!', 'success');
                 }
 
                 // Update food inventory: Find by name, then update quantity and expiry date
                 let foodItem = foodInventoryData.find(item => item.name.toLowerCase() === itemName.toLowerCase());
                 if (foodItem) {
                     foodItem.quantity += quantity;
-                    foodItem.expiryDate = expiryDate; // Update expiry date with the latest purchase
+                    // Only update expiry date if the new purchase date results in a later expiry
+                    if (!foodItem.expiryDate || new Date(expiryDate) > new Date(foodItem.expiryDate)) {
+                         foodItem.expiryDate = expiryDate;
+                    }
                 } else {
                     // If item doesn't exist in inventory, add it
                     foodInventoryData.push({ uuid: crypto.randomUUID(), name: itemName, quantity: quantity, unit: unit, expiryDate: expiryDate });
@@ -1627,12 +2043,12 @@
                 document.getElementById('purchase-price-per-unit').value = '';
                 document.getElementById('purchase-date').value = '';
             } else {
-                alert('Please fill in all purchase transaction information.');
+                await showCustomModal('Lỗi', 'Vui lòng điền đầy đủ thông tin giao dịch mua hàng.', 'alert');
             }
         });
 
 
-        document.getElementById('add-other-expense-btn').addEventListener('click', () => {
+        document.getElementById('add-other-expense-btn').addEventListener('click', async () => {
             const description = document.getElementById('other-expense-description').value.trim();
             const amount = parseFloat(document.getElementById('other-expense-amount').value);
             const date = document.getElementById('other-expense-date').value;
@@ -1644,13 +2060,13 @@
                         expense.description = description;
                         expense.amount = amount;
                         expense.date = date;
-                        alert('Other expense updated successfully!');
+                        showToast('Biến phí khác đã được cập nhật!', 'success');
                     }
                     editingOtherExpenseUUID = null;
                     document.getElementById('add-other-expense-btn').textContent = 'Thêm Biến phí';
                 } else {
                     otherExpensesData.push({ uuid: crypto.randomUUID(), description, amount, date });
-                    alert('Other expense added successfully!');
+                    showToast('Biến phí khác đã được thêm!', 'success');
                 }
                 updateOtherExpenseTable();
                 calculateSummaryForDateRange();
@@ -1659,11 +2075,11 @@
                 document.getElementById('other-expense-amount').value = '';
                 document.getElementById('other-expense-date').value = '';
             } else {
-                alert('Please fill in all other expense information.');
+                await showCustomModal('Lỗi', 'Vui lòng điền đầy đủ thông tin biến phí khác.', 'alert');
             }
         });
 
-        document.getElementById('add-sale-btn').addEventListener('click', () => {
+        document.getElementById('add-sale-btn').addEventListener('click', async () => {
             const itemName = document.getElementById('sale-item-name').value.trim();
             const quantity = parseFloat(document.getElementById('sale-quantity').value);
             const originalPrice = parseFloat(document.getElementById('sale-price').value);
@@ -1677,7 +2093,7 @@
                 let foodItemInInventory = foodInventoryData.find(item => item.name.toLowerCase() === itemName.toLowerCase());
 
                 if (!foodItemInInventory) {
-                    alert('Item not found in inventory. Please add it to "Food & Inventory" first.');
+                    await showCustomModal('Lỗi', 'Không tìm thấy mặt hàng trong kho. Vui lòng thêm vào "Thực phẩm & Kho" trước.', 'alert');
                     return;
                 }
                 
@@ -1690,7 +2106,7 @@
                 }
 
                 if (availableQuantity < quantity) {
-                    alert(`Insufficient stock for ${itemName}. Available: ${foodItemInInventory.quantity} ${foodItemInInventory.unit}.`);
+                    await showCustomModal('Lỗi', `Không đủ hàng tồn kho cho ${itemName}. Có sẵn: ${foodItemInInventory.quantity} ${foodItemInInventory.unit}.`, 'alert');
                     return;
                 }
 
@@ -1705,15 +2121,15 @@
                         if (activePromo) {
                             discountApplied = activePromo.discountPercentage;
                             finalPrice = originalPrice * (1 - (discountApplied / 100));
-                            document.getElementById('discount-applied-text').textContent = `Applied Discount: ${discountApplied}%`;
+                            document.getElementById('discount-applied-text').textContent = `Đã áp dụng giảm giá: ${discountApplied}%`;
                         } else {
-                            document.getElementById('discount-applied-text').textContent = 'No active promotion.';
+                            document.getElementById('discount-applied-text').textContent = 'Không có khuyến mãi đang hoạt động.';
                         }
                     } else {
-                        document.getElementById('discount-applied-text').textContent = 'Customer not eligible for discount yet (min 3 purchases).';
+                        document.getElementById('discount-applied-text').textContent = 'Khách hàng chưa đủ điều kiện giảm giá (tối thiểu 3 lượt mua).';
                     }
                 } else {
-                    document.getElementById('discount-applied-text').textContent = 'No phone number entered.';
+                    document.getElementById('discount-applied-text').textContent = 'Chưa nhập số điện thoại.';
                 }
 
                 const sale = { uuid: crypto.randomUUID(), itemName, quantity, originalPrice, price: finalPrice, date, customerPhone, discountApplied };
@@ -1739,7 +2155,7 @@
                         // Apply new data
                         Object.assign(existingSale, sale);
                         foodItemInInventory.quantity -= quantity; // Deduct new quantity
-                        alert('Sales transaction updated successfully!');
+                        showToast('Giao dịch bán hàng đã được cập nhật!', 'success');
 
                         // Update new customer loyalty points if applicable
                         if (customer) {
@@ -1752,7 +2168,7 @@
                 } else {
                     salesData.push(sale);
                     foodItemInInventory.quantity -= quantity; // Deduct from inventory
-                    alert('Sales transaction added successfully!');
+                    showToast('Giao dịch bán hàng đã được thêm!', 'success');
 
                     // Update customer's purchase count and loyalty points
                     if (customer) {
@@ -1772,11 +2188,11 @@
                 document.getElementById('sale-customer-phone').value = '';
                 document.getElementById('discount-applied-text').textContent = 'Chưa áp dụng giảm giá';
             } else {
-                alert('Please fill in all sales transaction information.');
+                await showCustomModal('Lỗi', 'Vui lòng điền đầy đủ thông tin giao dịch bán hàng.', 'alert');
             }
         });
 
-        document.getElementById('add-product-item-btn').addEventListener('click', () => {
+        document.getElementById('add-product-item-btn').addEventListener('click', async () => {
             const name = document.getElementById('product-item-name').value.trim();
             const defaultUnit = document.getElementById('product-item-default-unit').value.trim();
             const defaultSellingPrice = parseFloat(document.getElementById('product-item-default-selling-price').value);
@@ -1794,13 +2210,13 @@
                         productItem.shelfLifeDays = isNaN(shelfLifeDays) ? 0 : shelfLifeDays;
                         productItem.dailyTargetQuantity = isNaN(dailyTargetQuantity) ? 0 : dailyTargetQuantity;
                         productItem.dailyTargetUnit = dailyTargetUnit;
-                        alert('Product item updated successfully!');
+                        showToast('Mặt hàng đã được cập nhật!', 'success');
                     }
                     editingProductItemUUID = null;
                     document.getElementById('add-product-item-btn').textContent = 'Thêm Mặt hàng';
                 } else {
                     if (productItemsData.some(item => item.name.toLowerCase() === name.toLowerCase())) {
-                        alert('This product item already exists!');
+                        await showCustomModal('Lỗi', 'Mặt hàng này đã tồn tại!', 'alert');
                         return;
                     }
                     productItemsData.push({ 
@@ -1812,7 +2228,7 @@
                         dailyTargetQuantity: isNaN(dailyTargetQuantity) ? 0 : dailyTargetQuantity,
                         dailyTargetUnit: dailyTargetUnit
                     });
-                    alert('Product item added successfully!');
+                    showToast('Mặt hàng đã được thêm!', 'success');
                 }
                 updateProductItemsTable();
                 updateProductDatalist();
@@ -1825,11 +2241,11 @@
                 updateCharts();
                 updateDailyKpiTable();
             } else {
-                alert('Please fill in the product item name.');
+                await showCustomModal('Lỗi', 'Vui lòng điền tên mặt hàng.', 'alert');
             }
         });
 
-        document.getElementById('add-promo-btn').addEventListener('click', () => {
+        document.getElementById('add-promo-btn').addEventListener('click', async () => {
             const name = document.getElementById('promo-name').value.trim();
             const discountPercentage = parseFloat(document.getElementById('promo-discount-percentage').value);
             const startDate = document.getElementById('promo-start-date').value;
@@ -1837,11 +2253,11 @@
 
             if (name && !isNaN(discountPercentage) && startDate && endDate) {
                 if (discountPercentage < 0 || discountPercentage > 100) {
-                    alert('Discount percentage must be between 0 and 100.');
+                    await showCustomModal('Lỗi', 'Phần trăm giảm giá phải từ 0 đến 100.', 'alert');
                     return;
                 }
                 if (startDate > endDate) {
-                    alert('Start date cannot be after end date.');
+                    await showCustomModal('Lỗi', 'Ngày bắt đầu không thể sau ngày kết thúc.', 'alert');
                     return;
                 }
 
@@ -1850,13 +2266,13 @@
                     const existingPromo = findItemByUUID(promotionsData, editingPromoUUID);
                     if (existingPromo) {
                         Object.assign(existingPromo, promo);
-                        alert('Promotion updated successfully!');
+                        showToast('Khuyến mãi đã được cập nhật!', 'success');
                     }
                     editingPromoUUID = null;
                     document.getElementById('add-promo-btn').textContent = 'Thêm Khuyến mãi';
                 } else {
                     promotionsData.push(promo);
-                    alert('Promotion added successfully!');
+                    showToast('Khuyến mãi đã được thêm!', 'success');
                 }
                 updatePromotionsTable();
                 document.getElementById('promo-name').value = '';
@@ -1864,7 +2280,7 @@
                 document.getElementById('promo-start-date').value = '';
                 document.getElementById('promo-end-date').value = '';
             } else {
-                alert('Please fill in all promotion details.');
+                await showCustomModal('Lỗi', 'Vui lòng điền đầy đủ thông tin khuyến mãi.', 'alert');
             }
         });
 
@@ -1881,18 +2297,19 @@
             };
             const jsonString = JSON.stringify(allData, null, 2);
             downloadFile(jsonString, 'business_data.json', 'application/json');
+            showToast('Đã xuất tất cả dữ liệu thành JSON!', 'info');
         });
 
         document.getElementById('import-data-btn').addEventListener('click', () => {
             document.getElementById('import-data-file').click();
         });
 
-        document.getElementById('import-data-file').addEventListener('change', (event) => {
+        document.getElementById('import-data-file').addEventListener('change', async (event) => {
             const file = event.target.files[0];
             if (!file) return;
 
             const reader = new FileReader();
-            reader.onload = (e) => {
+            reader.onload = async (e) => { // Use async here
                 try {
                     const importedData = JSON.parse(e.target.result);
                     if (importedData.salesData) salesData = importedData.salesData;
@@ -1914,10 +2331,11 @@
 
 
                     initializeApp();
-                    alert('Data imported successfully!');
+                    showToast('Dữ liệu đã được nhập thành công!', 'success');
                 } catch (error) {
-                    alert('Error reading JSON file. Please check file format.');
+                    await showCustomModal('Lỗi', 'Lỗi khi đọc tệp JSON. Vui lòng kiểm tra định dạng tệp.', 'error');
                     console.error('Error importing data:', error);
+                    showToast('Lỗi khi nhập dữ liệu!', 'error');
                 }
             };
             reader.readAsText(file);
@@ -2005,6 +2423,7 @@
             ];
             const csv = convertToCsv(summaryData, headers);
             downloadFile(csv, 'overall_summary.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất báo cáo tổng quan CSV!', 'info');
         });
 
 
@@ -2016,10 +2435,12 @@
                 { key: 'nextFollowup', label: 'Next Followup Date' },
                 { key: 'status', label: 'Status' },
                 { key: 'purchaseCount', label: 'Purchase Count' },
-                { key: 'loyaltyPoints', label: 'Loyalty Points' }
+                { key: 'loyaltyPoints', label: 'Loyalty Points' },
+                { key: 'tier', label: 'Tier' }
             ];
             const csv = convertToCsv(customersData, headers);
             downloadFile(csv, 'customers.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất dữ liệu khách hàng CSV!', 'info');
         });
 
         document.getElementById('export-food-inventory-csv-btn').addEventListener('click', () => {
@@ -2031,6 +2452,7 @@
             ];
             const csv = convertToCsv(foodInventoryData, headers);
             downloadFile(csv, 'food_inventory.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất dữ liệu tồn kho thực phẩm CSV!', 'info');
         });
 
         document.getElementById('export-purchase-history-csv-btn').addEventListener('click', () => {
@@ -2045,6 +2467,7 @@
             ];
             const csv = convertToCsv(purchaseHistoryData, headers);
             downloadFile(csv, 'purchase_history.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất lịch sử mua hàng CSV!', 'info');
         });
 
         document.getElementById('export-other-expenses-csv-btn').addEventListener('click', () => {
@@ -2055,6 +2478,7 @@
             ];
             const csv = convertToCsv(otherExpensesData, headers);
             downloadFile(csv, 'other_expenses.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất dữ liệu biến phí khác CSV!', 'info');
         });
 
         document.getElementById('export-sales-csv-btn').addEventListener('click', () => {
@@ -2069,6 +2493,7 @@
             ];
             const csv = convertToCsv(salesData, headers);
             downloadFile(csv, 'sales.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất dữ liệu doanh thu CSV!', 'info');
         });
 
         document.getElementById('export-product-items-csv-btn').addEventListener('click', () => {
@@ -2082,6 +2507,7 @@
             ];
             const csv = convertToCsv(productItemsData, headers);
             downloadFile(csv, 'product_items.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất dữ liệu mặt hàng CSV!', 'info');
         });
 
         document.getElementById('export-promotions-csv-btn').addEventListener('click', () => {
@@ -2093,11 +2519,12 @@
             ];
             const csv = convertToCsv(promotionsData, headers);
             downloadFile(csv, 'promotions.csv', 'text/csv;charset=utf-8;');
+            showToast('Đã xuất dữ liệu khuyến mãi CSV!', 'info');
         });
 
 
         // Event Listeners for Navigation
-        navItems.forEach(item => {
+        navSectionButtons.forEach(item => { // Changed to use navSectionButtons
             item.addEventListener('click', () => {
                 const sectionId = `section-${item.id.replace('nav-', '')}`;
                 showSection(sectionId);
@@ -2105,16 +2532,23 @@
         });
 
         // Event listeners for date filters and low stock threshold
-        startDateFilter.addEventListener('change', calculateSummaryForDateRange);
-        endDateFilter.addEventListener('change', calculateSummaryForDateRange);
+        startDateFilter.addEventListener('change', () => {
+            calculateSummaryForDateRange();
+            updateCharts(); // Update charts when date range changes
+        });
+        endDateFilter.addEventListener('change', () => {
+            calculateSummaryForDateRange();
+            updateCharts(); // Update charts when date range changes
+        });
         lowStockThresholdInput.addEventListener('change', updateFoodInventoryTable);
         minDaysBeforeExpiryWarningInput.addEventListener('change', updateFoodInventoryTable);
         kpiTargetPercentageInput.addEventListener('change', updateDailyKpiTable);
 
 
-        document.getElementById('update-kpi-targets-btn').addEventListener('click', () => {
+        document.getElementById('update-kpi-targets-btn').addEventListener('click', async () => {
             const kpiTargetPercentage = parseFloat(kpiTargetPercentageInput.value) / 100 || 0.8;
             const todayStr = new Date().toISOString().slice(0, 10);
+            let updatedCount = 0;
 
             productItemsData.forEach(item => {
                 if (!item.dailyTargetQuantity || item.dailyTargetQuantity <= 0) return;
@@ -2128,11 +2562,70 @@
                 if (kpiAchievement < kpiTargetPercentage) {
                     // Increase target by a small percentage, e.g., 5%
                     item.dailyTargetQuantity = Math.ceil(item.dailyTargetQuantity * 1.05);
+                    updatedCount++;
                 }
             });
             updateProductItemsTable(); // Refresh the table where product item targets are shown
             updateDailyKpiTable(); // Recalculate and display KPIs
-            alert('Daily KPI targets updated for next day based on today\'s performance!');
+            if (updatedCount > 0) {
+                showToast(`Đã cập nhật chỉ tiêu KPI cho ${updatedCount} mặt hàng cho ngày tiếp theo!`, 'success');
+            } else {
+                showToast('Tất cả mặt hàng đều đạt chỉ tiêu KPI hoặc không có chỉ tiêu.', 'info');
+            }
+        });
+
+         document.getElementById('sale-customer-phone').addEventListener('input', () => {
+            const customerPhone = document.getElementById('sale-customer-phone').value.trim();
+            const discountTextElement = document.getElementById('discount-applied-text');
+
+            if (customerPhone) {
+                const customer = customersData.find(c => c.phoneNumber === customerPhone);
+                if (customer && (customer.purchaseCount || 0) >= MIN_LOYALTY_PURCHASES) {
+                    const today = new Date().toISOString().slice(0, 10);
+                    const activePromo = promotionsData.find(promo => 
+                        promo.startDate <= today && promo.endDate >= today
+                    );
+                    if (activePromo) {
+                        discountTextElement.textContent = `Đã áp dụng giảm giá: ${activePromo.discountPercentage}%`;
+                    } else {
+                        discountTextElement.textContent = 'Không có khuyến mãi đang hoạt động.';
+                    }
+                } else {
+                    discountTextElement.textContent = `Khách hàng chưa đủ điều kiện giảm giá (tối thiểu ${MIN_LOYALTY_PURCHASES} lượt mua).`;
+                }
+            } else {
+                discountTextElement.textContent = 'Chưa nhập số điện thoại.';
+            }
+        });
+
+        // Theme Toggle Logic
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+            const isDarkMode = document.body.classList.toggle('dark-mode');
+            const currentThemeText = document.getElementById('current-theme');
+            if (isDarkMode) {
+                localStorage.setItem('theme', 'dark');
+                currentThemeText.textContent = 'Tối 🌑';
+            } else {
+                localStorage.setItem('theme', 'light');
+                currentThemeText.textContent = 'Sáng ☀️';
+            }
+            updateCharts(); // Redraw charts to adjust colors if needed (Chart.js usually handles this, but good to ensure)
+        });
+
+        // Toggle Chart Visibility Logic
+        document.querySelectorAll('.toggle-chart-visibility').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const targetId = event.target.dataset.target;
+                const targetCard = document.getElementById(targetId);
+                if (targetCard) {
+                    const isHidden = targetCard.classList.toggle('hidden');
+                    event.target.textContent = isHidden ? 'Hiện' : 'Ẩn';
+                    // Re-render charts if they become visible, to ensure proper sizing
+                    if (!isHidden && targetCard.querySelector('canvas')) {
+                        updateCharts(); // Re-initialize all charts to ensure correct rendering
+                    }
+                }
+            });
         });
 
 
